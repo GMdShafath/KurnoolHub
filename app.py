@@ -18,14 +18,13 @@ def get_db_connection():
     if not mysql_url:
         raise Exception("MYSQL_URL is not configured")
 
-    db_url = urlparse(mysql_url)
-
     return mysql.connector.connect(
-        host=db_url.hostname,
-        port=db_url.port or 3306,
-        user=unquote(db_url.username),
-        password=unquote(db_url.password),
-        database=db_url.path.lstrip("/")
+        option_files=None,
+        host=os.environ.get("MYSQLHOST"),
+        port=int(os.environ.get("MYSQLPORT", 3306)),
+        user=os.environ.get("MYSQLUSER"),
+        password=os.environ.get("MYSQLPASSWORD"),
+        database=os.environ.get("MYSQLDATABASE")
     )
 # =========================
 # HOME PAGE
