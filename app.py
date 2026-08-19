@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, session
 import mysql.connector
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -12,13 +13,12 @@ app.secret_key = "kurnoolhub-secret-key"
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="127.0.0.1",
-        port=3306,
-        user="kurnool_app",
-        password="Shafath0099@",
-        database="kurnool_hub"
+        host=os.environ.get("MYSQLHOST"),
+        port=int(os.environ.get("MYSQLPORT", 3306)),
+        user=os.environ.get("MYSQLUSER"),
+        password=os.environ.get("MYSQLPASSWORD"),
+        database=os.environ.get("MYSQLDATABASE")
     )
-
 
 # =========================
 # HOME PAGE
