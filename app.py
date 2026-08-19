@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, session
 import mysql.connector
 import os
+from urllib.parse import urlparse, unquote
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -12,14 +13,20 @@ app.secret_key = "kurnoolhub-secret-key"
 # =========================
 
 def get_db_connection():
-    return mysql.connector.connect(
-        host=os.environ.get("MYSQLHOST"),
-        port=int(os.environ.get("MYSQLPORT", 3306)),
-        user=os.environ.get("MYSQLUSER"),
-        password=os.environ.get("MYSQLPASSWORD"),
-        database=os.environ.get("MYSQLDATABASE")
-    )
+    mysql_url = os.environ.get("MYSQL_URL")
 
+    if not mysql_url:
+        raise Exception("MYSQL_URL is not configured")
+
+    db_url = urlparse(mysql_url)
+
+    return mysql.connector.connect(
+        host=db_url.hostname,
+        port=db_url.port or 3306,
+        user=unquote(db_url.username),
+        password=unquote(db_url.password),
+        database=db_url.path.lstrip("/")
+    )
 # =========================
 # HOME PAGE
 # =========================
