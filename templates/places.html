@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Places — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        EXPLORE KURNOOL
+    </div>
+
+    <h1>
+        Places to Visit
+    </h1>
+
+    <p>
+        Discover beautiful and popular places in and around Kurnool.
+    </p>
+
+</section>
+
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            Popular <span>Places</span>
+        </h2>
+
+    </div>
+
+
+    <div class="place-row">
+
+        {% for p in places %}
+
+        <article class="place-card">
+
+            <img
+                src="{% if p.image and p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename='images/' ~ p.image) }}{% endif %}"
+                alt="{{ p.name }}"
+            >
+
+            <span>
+                {{ p.type }}
+            </span>
+
+            <div>
+
+                <h3>
+                    {{ p.name }}
+                </h3>
+
+                <p>
+                    {{ p.desc }}
+                </p>
+
+                {% if p.location %}
+
+                <p>
+                    📍 {{ p.location }}
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <p>
+            No places available yet.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}{{ place.name }} — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="business-detail-page">
+
+    <div class="business-detail-container">
+
+        <!-- PLACE IMAGE -->
+
+        <div class="business-detail-image">
+
+            <img
+                src="{% if place.image and place.image.startswith('http') %}{{ place.image }}{% else %}{{ url_for('static', filename='images/' ~ place.image) }}{% endif %}"
+                alt="{{ place.name }}"
+            >
+
+        </div>
+
+
+        <!-- PLACE DETAILS -->
+
+        <div class="business-detail-content">
+
+            <div class="detail-category">
+                {{ place.type or "Place" }}
+            </div>
+
+
+            <h1>
+                {{ place.name }}
+            </h1>
+
+
+            {% if place.desc %}
+
+            <p class="detail-description">
+                {{ place.desc }}
+            </p>
+
+            {% endif %}
+
+
+            {% if place.location %}
+
+            <div class="detail-info">
+
+                <span class="detail-icon">
+                    📍
+                </span>
+
+                <div>
+
+                    <strong>
+                        Location
+                    </strong>
+
+                    <p>
+                        {{ place.location }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="detail-info">
+
+                <span class="detail-icon">
+                    📍
+                </span>
+
+                <div>
+
+                    <strong>
+                        City
+                    </strong>
+
+                    <p>
+                        Kurnool, Andhra Pradesh
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-buttons">
+
+                {% if place.location %}
+
+                <a
+                    href="https://www.google.com/maps/search/?api=1&query={{ place.location | urlencode }}"
+                    target="_blank"
+                    class="detail-call"
+                >
+                    🗺️ Get Directions
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="detail-back">
+
+    <a href="/places">
+        ← Back to Places
+    </a>
+
+</section>
+
+{% endblock %}

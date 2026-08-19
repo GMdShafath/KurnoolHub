@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Offers — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        LOCAL OFFERS
+    </div>
+
+    <h1>
+        Offers in Kurnool
+    </h1>
+
+    <p>
+        Discover special offers and deals from local businesses.
+    </p>
+
+</section>
+
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            Latest <span>Offers</span>
+        </h2>
+
+    </div>
+
+
+    <div class="business-row">
+
+        <article class="business-card">
+
+            <div class="business-img">
+
+                <img
+                    src="{{ url_for('static', filename='images/pista_house.png') }}"
+                    alt="Pista House"
+                >
+
+                <span class="tag">
+                    SPECIAL OFFER
+                </span>
+
+            </div>
+
+
+            <div class="business-info">
+
+                <small>
+                    FOOD
+                </small>
+
+                <h3>
+                    Pista House
+                </h3>
+
+                <p>
+                    Check out the latest offers and special deals available at Pista House.
+                </p>
+
+                <a href="/business/1">
+                    View Business →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <article class="business-card">
+
+            <div class="business-img">
+
+                <img
+                    src="{{ url_for('static', filename='images/forza_cafe.jpg') }}"
+                    alt="Forza Cafe"
+                >
+
+                <span class="tag">
+                    SPECIAL OFFER
+                </span>
+
+            </div>
+
+
+            <div class="business-info">
+
+                <small>
+                    CAFE
+                </small>
+
+                <h3>
+                    Forza Cafe
+                </h3>
+
+                <p>
+                    Explore available offers and deals from Forza Cafe.
+                </p>
+
+                <a href="/business/2">
+                    View Business →
+                </a>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}{{ business.name }} — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="business-detail-page">
+
+    <div class="business-detail-container">
+
+        <!-- =========================
+             BUSINESS IMAGE
+        ========================== -->
+
+        <div class="business-detail-image">
+
+            <img
+                src="{% if business.image and business.image.startswith('http') %}{{ business.image }}{% else %}{{ url_for('static', filename='images/' ~ business.image) }}{% endif %}"
+                alt="{{ business.name }}"
+            >
+
+        </div>
+
+
+        <!-- =========================
+             BUSINESS DETAILS
+        ========================== -->
+
+        <div class="business-detail-content">
+
+            <div class="detail-category">
+                {{ business.category or "Business" }}
+            </div>
+
+
+            <h1>
+                {{ business.name }}
+            </h1>
+
+
+            <!-- RATING -->
+
+            <div class="detail-rating">
+
+                <span class="rating">
+                    ★ {{ business.rating or "0.0" }}
+                </span>
+
+                <span>
+                    ({{ business.reviews or "0" }} reviews)
+                </span>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            {% if business.description %}
+
+            <p class="detail-description">
+                {{ business.description }}
+            </p>
+
+            {% else %}
+
+            <p class="detail-description">
+                Discover more information about {{ business.name }} in Kurnool.
+            </p>
+
+            {% endif %}
+
+
+            <!-- ADDRESS -->
+
+            {% if business.address %}
+
+            <div class="detail-info">
+
+                <span class="detail-icon">
+                    📍
+                </span>
+
+                <div>
+
+                    <strong>
+                        Address
+                    </strong>
+
+                    <p>
+                        {{ business.address }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- PHONE -->
+
+            {% if business.phone %}
+
+            <div class="detail-info">
+
+                <span class="detail-icon">
+                    📞
+                </span>
+
+                <div>
+
+                    <strong>
+                        Phone
+                    </strong>
+
+                    <p>
+                        <a href="tel:{{ business.phone }}">
+                            {{ business.phone }}
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- LOCATION -->
+
+            <div class="detail-info">
+
+                <span class="detail-icon">
+                    📍
+                </span>
+
+                <div>
+
+                    <strong>
+                        Location
+                    </strong>
+
+                    <p>
+                        Kurnool, Andhra Pradesh
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="detail-buttons">
+
+                {% if business.phone %}
+
+                <a
+                    href="tel:{{ business.phone }}"
+                    class="detail-call"
+                >
+                    📞 Call Now
+                </a>
+
+                {% endif %}
+
+
+                <button
+                    class="detail-save"
+                    type="button"
+                    data-business-id="{{ business.id }}"
+                    onclick="toggleFavorite(this)"
+                >
+                    ♡ Save
+                </button>
+
+
+                {% if business.address %}
+
+                <a
+                    href="https://www.google.com/maps/search/?api=1&query={{ business.address | urlencode }}"
+                    target="_blank"
+                    class="detail-save"
+                >
+                    🗺️ Directions
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     REVIEWS & RATINGS
+========================= -->
+
+<section class="section">
+
+    <div
+        style="
+            max-width:800px;
+            margin:0 auto;
+        "
+    >
+
+        <div class="section-title">
+
+            <h2>
+                Reviews & <span>Ratings</span>
+            </h2>
+
+        </div>
+
+
+        <!-- WRITE REVIEW -->
+
+        <div
+            style="
+                background:#fff;
+                border:1px solid #e1e5e8;
+                border-radius:16px;
+                padding:25px;
+                margin-bottom:25px;
+            "
+        >
+
+            <h3>
+                Write a Review
+            </h3>
+
+            <p>
+                Share your experience with {{ business.name }}.
+            </p>
+
+
+            <form
+                method="POST"
+                action="/business/{{ business.id }}/review"
+            >
+
+                <label
+                    for="rating"
+                    style="
+                        display:block;
+                        font-size:11px;
+                        font-weight:800;
+                        margin-bottom:8px;
+                    "
+                >
+                    YOUR RATING
+                </label>
+
+
+                <select
+                    id="rating"
+                    name="rating"
+                    required
+                    style="
+                        padding:10px;
+                        border:1px solid #dfe4e7;
+                        border-radius:8px;
+                        margin-bottom:18px;
+                    "
+                >
+
+                    <option value="">
+                        Select rating
+                    </option>
+
+                    <option value="5">
+                        ★★★★★ — 5
+                    </option>
+
+                    <option value="4">
+                        ★★★★☆ — 4
+                    </option>
+
+                    <option value="3">
+                        ★★★☆☆ — 3
+                    </option>
+
+                    <option value="2">
+                        ★★☆☆☆ — 2
+                    </option>
+
+                    <option value="1">
+                        ★☆☆☆☆ — 1
+                    </option>
+
+                </select>
+
+
+                <label
+                    for="review"
+                    style="
+                        display:block;
+                        font-size:11px;
+                        font-weight:800;
+                        margin-bottom:8px;
+                    "
+                >
+                    YOUR REVIEW
+                </label>
+
+
+                <textarea
+                    id="review"
+                    name="review"
+                    rows="4"
+                    placeholder="Write your experience..."
+                    required
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        padding:12px;
+                        border:1px solid #dfe4e7;
+                        border-radius:8px;
+                        resize:vertical;
+                        margin-bottom:15px;
+                    "
+                ></textarea>
+
+
+                <button
+                    type="submit"
+                    style="
+                        background:var(--orange);
+                        color:#fff;
+                        border:0;
+                        border-radius:8px;
+                        padding:12px 18px;
+                        font-size:11px;
+                        font-weight:800;
+                        cursor:pointer;
+                    "
+                >
+                    Submit Review
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- EXISTING REVIEWS -->
+
+        <div
+            style="
+                background:#fff;
+                border:1px solid #e1e5e8;
+                border-radius:16px;
+                padding:25px;
+            "
+        >
+
+            <h3>
+                Customer Reviews
+            </h3>
+
+
+            {% if reviews %}
+
+                {% for review in reviews %}
+
+                <div
+                    style="
+                        padding:18px 0;
+                        border-bottom:1px solid #eee;
+                    "
+                >
+
+                    <strong>
+                        {{ review.user_name }}
+                    </strong>
+
+                    <div style="margin-top:5px;">
+                        <span>
+                            ★ {{ review.rating }}/5
+                        </span>
+                    </div>
+
+                    <p>
+                        {{ review.comment }}
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    No reviews yet. Be the first to review this business.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BACK BUTTON
+========================= -->
+
+<section class="detail-back">
+
+    <a href="/businesses">
+        ← Back to Businesses
+    </a>
+
+</section>
+
+{% endblock %}

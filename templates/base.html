@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <meta name="description"
+          content="KurnoolHub — Discover businesses, places, events and services in Kurnool.">
+
+    <title>
+        {% block title %}KurnoolHub{% endblock %}
+    </title>
+
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Main CSS -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="mini-bar">
+
+        <span>
+            📍 Kurnool, AP
+        </span>
+
+        <span>
+            Discover • Explore • Connect
+        </span>
+
+    </div>
+
+
+    <nav class="nav">
+
+        <a class="logo" href="/">
+
+            <b>Kurnool</b>
+            <strong>Hub</strong>
+
+            <small>
+                Discover • Explore • Connect
+            </small>
+
+        </a>
+
+
+        <div
+            class="navlinks"
+            id="navlinks"
+        >
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/explore">
+                Explore
+            </a>
+
+            <a href="/businesses">
+                Businesses
+            </a>
+
+            <a href="/places">
+                Places
+            </a>
+
+            <a href="/events">
+                Events
+            </a>
+
+            <a href="/offers">
+                Offers
+            </a>
+
+            <a href="/news">
+                News
+            </a>
+
+        </div>
+
+
+        <div class="navright">
+
+
+            <!-- =========================
+                 FAVORITES
+            ========================= -->
+
+            <a
+                class="icon-btn"
+                href="/favorites"
+                style="text-decoration:none;"
+                title="My Favorites"
+            >
+                ♡
+            </a>
+
+
+            <!-- OTHER ICON -->
+
+            <button
+                class="icon-btn"
+                type="button"
+            >
+                ♧
+            </button>
+
+
+            <!-- =========================
+                 LOGIN / USER
+            ========================= -->
+
+            {% if session.get("user_id") %}
+
+                <a
+                    class="login"
+                    href="/profile"
+                    style="text-decoration:none;"
+                    title="My Account"
+                >
+                    👤 {{ session.get("user_name") }}
+                </a>
+
+                <a
+                    class="login"
+                    href="/logout"
+                >
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a
+                    class="login"
+                    href="/login"
+                >
+                    ♙ Login
+                </a>
+
+            {% endif %}
+
+
+            <!-- MOBILE MENU -->
+
+            <button
+                class="hamb"
+                type="button"
+                onclick="toggleNav()"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================
+     PAGE CONTENT
+========================= -->
+
+{% block content %}
+
+{% endblock %}
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-top">
+
+
+        <div>
+
+            <a
+                class="footer-logo"
+                href="/"
+            >
+                Kurnool<strong>Hub</strong>
+            </a>
+
+            <p>
+                Discover local. Support local. Experience Kurnool.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Explore
+            </h4>
+
+            <a href="/explore">
+                Categories
+            </a>
+
+            <a href="/businesses">
+                Businesses
+            </a>
+
+            <a href="/places">
+                Places
+            </a>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                For Businesses
+            </h4>
+
+            <a href="/list-business">
+                List your business
+            </a>
+
+            <a href="/offers">
+                Promote an offer
+            </a>
+
+        </div>
+
+
+        <div>
+
+            <h4>
+                Connect
+            </h4>
+
+            <a href="/news">
+                Local updates
+            </a>
+
+            <a href="/#contact">
+                Contact
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 KurnoolHub
+        </span>
+
+        <span>
+            Built for Kurnool, Andhra Pradesh
+        </span>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script
+    src="{{ url_for('static', filename='js/app.js') }}">
+</script>
+
+
+</body>
+
+</html>

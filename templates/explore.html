@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Explore — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        EXPLORE KURNOOL
+    </div>
+
+    <h1>
+        Discover more of your city.
+    </h1>
+
+    <p>
+        Browse categories and find places, services and local businesses.
+    </p>
+
+    <div class="mini-search">
+
+        <span>⌕</span>
+
+        <input
+            id="exploreInput"
+            placeholder="Search categories or businesses..."
+            oninput="filterExplore()"
+        >
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CATEGORIES
+========================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            Explore <span>Categories</span>
+        </h2>
+
+    </div>
+
+
+    <div class="category-row">
+
+        {% for c in categories %}
+
+        <a
+            class="category-card"
+            href="#listing"
+            onclick="selectCategory('{{ c.name }}'); return false;"
+        >
+
+            <img
+                src="{% if c.image and c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename='images/' ~ c.image) }}{% endif %}"
+                alt="{{ c.name }}"
+            >
+
+            <h3>
+                {{ c.name }}
+            </h3>
+
+            <p>
+                {{ c.desc }}
+            </p>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BUSINESSES
+========================= -->
+
+<section
+    class="section grey"
+    id="listing"
+>
+
+    <div class="section-title">
+
+        <h2>
+            Featured <span>Businesses</span>
+        </h2>
+
+        <button
+            onclick="showAllBusinesses()"
+            style="
+                border:0;
+                background:none;
+                cursor:pointer;
+                font-weight:600;
+                color:var(--orange);
+            "
+        >
+            Show All
+        </button>
+
+    </div>
+
+
+    <div
+        class="business-row"
+        id="exploreGrid"
+    >
+
+        {% for b in businesses %}
+
+        <article
+            class="business-card explore-item"
+            data-name="{{ b.name }} {{ b.category }}"
+            data-category="{{ b.category }}"
+            onclick="window.location.href='/business/{{ b.id }}'"
+            style="cursor:pointer;"
+        >
+
+            <div class="business-img">
+
+                <img
+                    src="{% if b.image and b.image.startswith('http') %}{{ b.image }}{% else %}{{ url_for('static', filename='images/' ~ b.image) }}{% endif %}"
+                    alt="{{ b.name }}"
+                >
+
+                <span class="tag">
+                    {{ b.tag }}
+                </span>
+
+            </div>
+
+
+            <div class="business-info">
+
+                <small>
+                    {{ b.category }}
+                </small>
+
+                <h3>
+                    {{ b.name }}
+                </h3>
+
+                <div class="meta">
+
+                    <b>
+                        ★ {{ b.rating }}
+                    </b>
+
+                    <span>
+                        ({{ b.reviews }})
+                    </span>
+
+                    <span>
+                        ⌖ Kurnool
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CATEGORY FILTER
+========================= -->
+
+<script>
+
+function selectCategory(category) {
+
+    const items =
+        document.querySelectorAll(".explore-item");
+
+    const listing =
+        document.getElementById("listing");
+
+    const selectedCategory =
+        category.toLowerCase().trim();
+
+    let found = false;
+
+
+    items.forEach(function(item) {
+
+        const itemCategory =
+            (item.dataset.category || "").toLowerCase();
+
+        /*
+         * Supports businesses with multiple categories.
+         *
+         * Example:
+         * TGV Mall → "Movies, Shopping"
+         *
+         * Selecting Movies → shows TGV Mall
+         * Selecting Shopping → shows TGV Mall
+         */
+
+        const categories =
+            itemCategory
+                .split(",")
+                .map(function(value) {
+                    return value.trim();
+                });
+
+
+        if (categories.includes(selectedCategory)) {
+
+            item.style.display = "";
+
+            found = true;
+
+        } else {
+
+            item.style.display = "none";
+
+        }
+
+    });
+
+
+    if (listing) {
+
+        listing.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    if (!found) {
+
+        showToast(
+            "No businesses found in " + category + " yet."
+        );
+
+    }
+
+}
+
+
+function showAllBusinesses() {
+
+    document
+        .querySelectorAll(".explore-item")
+        .forEach(function(item) {
+
+            item.style.display = "";
+
+        });
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function filterExplore() {
+
+    const input =
+        document.getElementById("exploreInput");
+
+    const query =
+        (input?.value || "").toLowerCase().trim();
+
+    const items =
+        document.querySelectorAll(".explore-item");
+
+
+    items.forEach(function(item) {
+
+        const name =
+            (item.dataset.name || "").toLowerCase();
+
+        item.style.display =
+            name.includes(query) ? "" : "none";
+
+    });
+
+}
+
+</script>
+
+
+{% endblock %}

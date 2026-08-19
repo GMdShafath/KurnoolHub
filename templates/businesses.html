@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Businesses — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        LOCAL BUSINESSES
+    </div>
+
+    <h1>
+        Find places you can discover and trust.
+    </h1>
+
+    <p>
+        Explore local businesses across Kurnool.
+    </p>
+
+    <div class="mini-search">
+
+        <span>⌕</span>
+
+        <input
+            id="businessInput"
+            placeholder="Search businesses..."
+            value="{{ search }}"
+            oninput="filterBusinesses()"
+        >
+
+    </div>
+
+</section>
+
+
+<section class="section grey">
+
+    <div
+        class="business-row"
+        id="businessGrid"
+    >
+
+        {% for b in businesses %}
+
+        <article
+            class="business-card business-item"
+            data-name="{{ b.name }} {{ b.category }}"
+            onclick="window.location.href='/business/{{ b.id }}'"
+            style="cursor:pointer;"
+        >
+
+            <div class="business-img">
+
+                <img
+                    src="{% if b.image and b.image.startswith('http') %}{{ b.image }}{% else %}{{ url_for('static', filename='images/' ~ b.image) }}{% endif %}"
+                    alt="{{ b.name }}"
+                >
+
+                <span class="tag">
+                    {{ b.tag }}
+                </span>
+
+
+                <!-- =========================
+                     FAVORITE BUTTON
+                ========================= -->
+
+                <button
+                    class="heart"
+                    type="button"
+                    data-business-id="{{ b.id }}"
+                    onclick="event.stopPropagation(); toggleFavorite(this)"
+                >
+                    ♡
+                </button>
+
+            </div>
+
+
+            <div class="business-info">
+
+                <small>
+                    {{ b.category }}
+                </small>
+
+                <h3>
+                    {{ b.name }}
+                </h3>
+
+                <div class="meta">
+
+                    <b>
+                        ★ {{ b.rating }}
+                    </b>
+
+                    <span>
+                        ({{ b.reviews }})
+                    </span>
+
+                    <span>
+                        ⌖ Kurnool
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div
+            style="
+                width:100%;
+                text-align:center;
+                padding:50px 20px;
+            "
+        >
+
+            <h3>
+                No businesses found
+            </h3>
+
+            <p>
+                Try searching for another business or category.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Events — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        EVENTS IN KURNOOL
+    </div>
+
+    <h1>
+        Upcoming Events
+    </h1>
+
+    <p>
+        Discover upcoming events, celebrations and activities in Kurnool.
+    </p>
+
+</section>
+
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            Upcoming <span>Events</span>
+        </h2>
+
+    </div>
+
+
+    <div class="event-list">
+
+        {% for event in events %}
+
+        <article class="event-feature">
+
+
+            <!-- EVENT IMAGE -->
+
+            <div
+                class="event-photo"
+                {% if event.image %}
+                style="
+                    background-image:url(
+                        {% if event.image.startswith('http') %}
+                            '{{ event.image }}'
+                        {% else %}
+                            '{{ url_for('static', filename='images/' ~ event.image) }}'
+                        {% endif %}
+                    );
+                    background-size:cover;
+                    background-position:center;
+                "
+                {% endif %}
+            >
+            </div>
+
+
+            <!-- EVENT DETAILS -->
+
+            <div class="event-details">
+
+                <div class="datebox">
+
+                    <b>
+                        {{ event.event_date.strftime('%b')|upper }}
+                    </b>
+
+                    <strong>
+                        {{ event.event_date.strftime('%d') }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <small>
+                        UPCOMING EVENT
+                    </small>
+
+                    <h3>
+                        {{ event.title }}
+                    </h3>
+
+
+                    {% if event.description %}
+
+                    <p>
+                        {{ event.description }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <p>
+
+                        📅
+                        {{ event.event_date.strftime('%B %d, %Y') }}
+
+                        &nbsp; • &nbsp;
+
+                        📍
+                        {{ event.location }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div style="
+            text-align:center;
+            padding:50px 20px;
+        ">
+
+            <h3>
+                No upcoming events
+            </h3>
+
+            <p>
+                Check back later for upcoming events in Kurnool.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

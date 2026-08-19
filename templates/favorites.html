@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}My Favorites — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        YOUR SAVED PLACES
+    </div>
+
+    <h1>
+        My <span>Favorites</span>
+    </h1>
+
+    <p>
+        Businesses you saved for later.
+    </p>
+
+</section>
+
+
+<section class="section grey">
+
+    <div class="section-title">
+
+        <h2>
+            Saved <span>Businesses</span>
+        </h2>
+
+    </div>
+
+
+    <div class="business-row">
+
+        {% if favorites %}
+
+            {% for b in favorites %}
+
+            <article
+                class="business-card"
+                onclick="window.location.href='/business/{{ b.id }}'"
+                style="cursor:pointer;"
+            >
+
+                <div class="business-img">
+
+                    <img
+                        src="{% if b.image and b.image.startswith('http') %}{{ b.image }}{% else %}{{ url_for('static', filename='images/' ~ b.image) }}{% endif %}"
+                        alt="{{ b.name }}"
+                    >
+
+                    <span class="tag">
+                        Saved
+                    </span>
+
+                    <button
+                        class="heart liked"
+                        type="button"
+                        data-business-id="{{ b.id }}"
+                        onclick="event.stopPropagation(); toggleFavorite(this)"
+                    >
+                        ♥
+                    </button>
+
+                </div>
+
+
+                <div class="business-info">
+
+                    <small>
+                        {{ b.category }}
+                    </small>
+
+                    <h3>
+                        {{ b.name }}
+                    </h3>
+
+                    <div class="meta">
+
+                        <b>
+                            ★ {{ b.rating }}
+                        </b>
+
+                        <span>
+                            ({{ b.reviews }})
+                        </span>
+
+                        <i>
+                            ⌖
+                        </i>
+
+                        <span>
+                            Kurnool
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div
+                style="
+                    width:100%;
+                    text-align:center;
+                    padding:50px 20px;
+                "
+            >
+
+                <h3>
+                    No Favorites Yet
+                </h3>
+
+                <p>
+                    Save businesses you like by clicking the ♡ button.
+                </p>
+
+                <a
+                    href="/businesses"
+                    style="
+                        display:inline-block;
+                        margin-top:15px;
+                        background:var(--orange);
+                        color:#fff;
+                        padding:12px 18px;
+                        border-radius:8px;
+                        text-decoration:none;
+                        font-size:11px;
+                        font-weight:800;
+                    "
+                >
+                    Explore Businesses →
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

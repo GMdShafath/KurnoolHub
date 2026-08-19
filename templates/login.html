@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Login — KurnoolHub{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+
+    <div class="welcome">
+        WELCOME BACK
+    </div>
+
+    <h1>
+        Login to <span>KurnoolHub</span>
+    </h1>
+
+    <p>
+        Login to save businesses, places and manage your account.
+    </p>
+
+</section>
+
+
+<section class="section">
+
+    <div
+        style="
+            max-width:420px;
+            margin:0 auto;
+            background:#fff;
+            border:1px solid #e1e5e8;
+            border-radius:16px;
+            padding:35px;
+            box-shadow:0 10px 30px rgba(20,30,40,.08);
+        "
+    >
+
+        <form
+            method="POST"
+            action="/login"
+        >
+
+            <div style="margin-bottom:18px;">
+
+                <label
+                    for="email"
+                    style="
+                        display:block;
+                        font-size:11px;
+                        font-weight:800;
+                        margin-bottom:7px;
+                    "
+                >
+                    EMAIL
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        padding:12px;
+                        border:1px solid #dfe4e7;
+                        border-radius:8px;
+                        font-size:12px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:22px;">
+
+                <label
+                    for="password"
+                    style="
+                        display:block;
+                        font-size:11px;
+                        font-weight:800;
+                        margin-bottom:7px;
+                    "
+                >
+                    PASSWORD
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                    style="
+                        width:100%;
+                        box-sizing:border-box;
+                        padding:12px;
+                        border:1px solid #dfe4e7;
+                        border-radius:8px;
+                        font-size:12px;
+                    "
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                style="
+                    width:100%;
+                    padding:13px;
+                    border:0;
+                    border-radius:8px;
+                    background:var(--orange);
+                    color:#fff;
+                    font-size:11px;
+                    font-weight:800;
+                    cursor:pointer;
+                "
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- REGISTER LINK -->
+
+        <p
+            style="
+                text-align:center;
+                margin-top:20px;
+                font-size:11px;
+            "
+        >
+            Don't have an account?
+
+            <a
+                href="/register"
+                style="
+                    color:var(--orange);
+                    font-weight:800;
+                    text-decoration:none;
+                "
+            >
+                Register
+            </a>
+
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
