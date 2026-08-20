@@ -30,18 +30,53 @@
 
         <div class="search">
 
-            <button
-                class="category-select"
-                onclick="showToast('Category filter coming next.')"
-            >
-                ▦ &nbsp; All Categories <span>⌄</span>
-            </button>
+            <!-- =========================
+                 CATEGORY DROPDOWN
+            ========================= -->
+
+            <div class="category-dropdown">
+
+                <button
+                    class="category-select"
+                    type="button"
+                    onclick="toggleCategoryDropdown()"
+                >
+                    ▦ &nbsp; All Categories <span>⌄</span>
+                </button>
+
+                <div
+                    id="categoryMenu"
+                    class="category-menu"
+                    style="display:none;"
+                >
+
+                    {% for c in categories %}
+
+                    <a href="/businesses?category={{ c.name }}">
+                        {{ c.name }}
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 SEARCH INPUT
+            ========================= -->
 
             <input
                 id="heroSearch"
                 placeholder="Search restaurants, places, services..."
                 onkeydown="if(event.key==='Enter')searchHome()"
             >
+
+
+            <!-- =========================
+                 SEARCH BUTTON
+            ========================= -->
 
             <button
                 class="search-btn"
