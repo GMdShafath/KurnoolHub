@@ -1540,3 +1540,74 @@ footer{
     object-fit: cover;
     border-radius: 10px;
 }
+/* =========================================
+   PROFESSIONAL HEADER ACTION BUTTONS
+========================================= */
+
+.navright .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 42px;
+    padding: 0 18px;
+
+    border: 1px solid #e3e3e3;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #333333;
+
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.navright .icon-btn:hover {
+    background: #fff7f2;
+    color: #d56b2d;
+    border-color: #d56b2d;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    transform: translateY(-1px);
+}
+
+
+/* LIST YOUR BUSINESS */
+
+.navright .icon-btn[href="/list-business"] {
+    background: #d56b2d;
+    color: #ffffff;
+    border-color: #d56b2d;
+}
+
+.navright .icon-btn[href="/list-business"]:hover {
+    background: #b95720;
+    border-color: #b95720;
+    color: #ffffff;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .navright .icon-btn {
+        height: 38px;
+        padding: 0 12px;
+        font-size: 13px;
+    }
+}
