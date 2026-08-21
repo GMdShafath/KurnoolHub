@@ -708,8 +708,18 @@ def businesses_page():
 
     # CATEGORY FILTER
     if category_id:
-        conditions.append("b.category_id = %s")
-        params.append(int(category_id))
+        conditions.append("""
+            (
+                b.category_id = %s
+                OR EXISTS (
+                    SELECT 1
+                    FROM business_categories bc_filter
+                    WHERE bc_filter.business_id = b.id
+                    AND bc_filter.category_id = %s
+                )
+            )
+        """)
+        params.extend([int(category_id), int(category_id)])
 
     # SEARCH FILTER
     if search:
@@ -720,10 +730,19 @@ def businesses_page():
                 LOWER(b.name) LIKE LOWER(%s)
                 OR LOWER(b.description) LIKE LOWER(%s)
                 OR LOWER(c.name) LIKE LOWER(%s)
+                OR EXISTS (
+                    SELECT 1
+                    FROM business_categories bc_search
+                    INNER JOIN categories c_search
+                        ON bc_search.category_id = c_search.id
+                    WHERE bc_search.business_id = b.id
+                    AND LOWER(c_search.name) LIKE LOWER(%s)
+                )
             )
         """)
 
         params.extend([
+            keyword,
             keyword,
             keyword,
             keyword
@@ -738,7 +757,16 @@ def businesses_page():
         SELECT
             b.id,
             b.name,
-            c.name AS category,
+
+            COALESCE(
+                GROUP_CONCAT(
+                    DISTINCT c2.name
+                    ORDER BY c2.name
+                    SEPARATOR ', '
+                ),
+                c.name
+            ) AS category,
+
             b.description,
             b.image,
 
@@ -775,7 +803,21 @@ def businesses_page():
         LEFT JOIN categories c
             ON b.category_id = c.id
 
+        LEFT JOIN business_categories bc
+            ON b.id = bc.business_id
+
+        LEFT JOIN categories c2
+            ON bc.category_id = c2.id
+
         {where_clause}
+
+        GROUP BY
+            b.id,
+            b.name,
+            b.description,
+            b.image,
+            b.rating,
+            c.name
 
         ORDER BY b.name
     """
@@ -796,7 +838,6 @@ def businesses_page():
         search=search,
         category_id=category_id
     )
-
 # =========================
 # BUSINESS DETAILS PAGE
 # =========================
