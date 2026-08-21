@@ -1338,6 +1338,34 @@ def admin_logout():
 
     return redirect("/admin/login")
 
+# =========================
+# ADMIN PASSWORD TEST
+# =========================
+
+@app.route("/admin/password-test")
+def admin_password_test():
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT password
+        FROM admins
+        WHERE email = %s
+    """, ("admin@kurnoolhub.com",))
+
+    admin = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if not admin:
+        return "Admin not found"
+
+    return jsonify({
+        "admin_found": True,
+        "hash_length": len(admin["password"])
+    })
 
 # =========================
 # ADMIN DASHBOARD
