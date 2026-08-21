@@ -1397,6 +1397,35 @@ def admin_check_password():
             test_password
         )
     })
+
+@app.route("/admin/fix-password")
+def fix_admin_password():
+
+    new_password = "shafath0099@"
+
+    hashed_password = generate_password_hash(new_password)
+
+    db = get_db_connection()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        UPDATE admins
+        SET password = %s
+        WHERE email = %s
+    """, (
+        hashed_password,
+        "admin@kurnoolhub.com"
+    ))
+
+    db.commit()
+
+    cursor.close()
+    db.close()
+
+    return jsonify({
+        "status": "success",
+        "hash_length": len(hashed_password)
+    })
 # =========================
 # ADMIN DASHBOARD
 # =========================
