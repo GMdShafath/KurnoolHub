@@ -1387,7 +1387,7 @@ def admin_check_password():
     if not admin:
         return jsonify({"admin_found": False})
 
-    test_password = "shafath0099"
+    test_password = "shafath0099@"
 
     return jsonify({
         "admin_found": True,
