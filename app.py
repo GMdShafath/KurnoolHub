@@ -1,11 +1,15 @@
-from flask import Flask, render_template, jsonify, request, session
+from flask import Flask, render_template, jsonify, request, session, redirect
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import mysql.connector
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = "kurnoolhub-secret-key"
 
+app.secret_key = "kurnoolhub-secret-key"
 
 # =========================
 # MYSQL DATABASE CONNECTION
@@ -390,7 +394,6 @@ def news_page():
 # =========================
 # LOGIN PAGE
 # =========================
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -413,10 +416,10 @@ def login():
 
         user = cursor.fetchone()
 
-        cursor.close()
-        db.close()
-
         if not user:
+            cursor.close()
+            db.close()
+
             return """
             <script>
                 alert("Invalid email or password.");
@@ -425,6 +428,9 @@ def login():
             """
 
         if not check_password_hash(user["password"], password):
+            cursor.close()
+            db.close()
+
             return """
             <script>
                 alert("Invalid email or password.");
@@ -432,7 +438,24 @@ def login():
             </script>
             """
 
-        # Save user information in session
+        # =========================
+        # SAVE LOGIN ACTIVITY
+        # =========================
+
+        cursor.execute("""
+            INSERT INTO login_activity (user_id)
+            VALUES (%s)
+        """, (user["id"],))
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        # =========================
+        # SAVE USER SESSION
+        # =========================
+
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
         session["user_email"] = user["email"]
@@ -1248,6 +1271,137 @@ def api_search():
     db.close()
 
     return jsonify(businesses)
+# =========================
+# ADMIN LOGIN
+# =========================
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").strip()
+
+        if not email or not password:
+            return "Email and password are required.", 400
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT id, name, email, password
+            FROM admins
+            WHERE email = %s
+        """, (email,))
+
+        admin = cursor.fetchone()
+
+        cursor.close()
+        db.close()
+
+        if not admin:
+            return """
+            <script>
+                alert("Invalid admin email or password.");
+                window.location.href = "/admin/login";
+            </script>
+            """
+
+        if not check_password_hash(admin["password"], password):
+            return """
+            <script>
+                alert("Invalid admin email or password.");
+                window.location.href = "/admin/login";
+            </script>
+            """
+
+        session["admin_id"] = admin["id"]
+        session["admin_name"] = admin["name"]
+        session["admin_email"] = admin["email"]
+
+        return redirect("/admin")
+
+    return render_template("admin_login.html")
+
+
+# =========================
+# ADMIN LOGOUT
+# =========================
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    session.pop("admin_id", None)
+    session.pop("admin_name", None)
+    session.pop("admin_email", None)
+
+    return redirect("/admin/login")
+
+
+# =========================
+# ADMIN DASHBOARD
+# =========================
+
+@app.route("/admin")
+def admin_dashboard():
+
+    if not session.get("admin_id"):
+        return redirect("/admin/login")
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT COUNT(*) AS total FROM users")
+    total_users = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM businesses")
+    total_businesses = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM reviews")
+    total_reviews = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM favorites")
+    total_favorites = cursor.fetchone()["total"]
+
+    cursor.execute("""
+        SELECT
+            u.name,
+            u.email,
+            u.created_at
+        FROM users u
+        ORDER BY u.id DESC
+        LIMIT 10
+    """)
+
+    recent_users = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT
+            u.name,
+            u.email,
+            l.login_time
+        FROM login_activity l
+        INNER JOIN users u
+            ON l.user_id = u.id
+        ORDER BY l.login_time DESC
+        LIMIT 10
+    """)
+
+    recent_logins = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        total_users=total_users,
+        total_businesses=total_businesses,
+        total_reviews=total_reviews,
+        total_favorites=total_favorites,
+        recent_users=recent_users,
+        recent_logins=recent_logins
+    )
 
 
 # =========================

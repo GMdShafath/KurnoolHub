@@ -1611,3 +1611,145 @@ footer{
         font-size: 13px;
     }
 }
+/* =========================================
+   ADMIN LOGIN
+========================================= */
+
+.admin-login-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 70px 20px;
+    background: #fafafa;
+}
+
+.admin-login-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.admin-login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-badge {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #fff1e8;
+    color: #d56b2d;
+    font-family: "DM Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.admin-login-header h1 {
+    margin: 0 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #222;
+}
+
+.admin-login-header p {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    color: #777;
+}
+
+.admin-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.admin-form-group label {
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+
+.admin-form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 9px;
+    outline: none;
+    background: #ffffff;
+    color: #222;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.admin-form-group input:focus {
+    border-color: #d56b2d;
+    box-shadow: 0 0 0 3px rgba(213, 107, 45, 0.12);
+}
+
+.admin-form-group input::placeholder {
+    color: #aaa;
+}
+
+.admin-login-button {
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 9px;
+    background: #d56b2d;
+    color: #ffffff;
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.admin-login-button:hover {
+    background: #b95720;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(213, 107, 45, 0.22);
+}
+
+.admin-back-link {
+    display: block;
+    margin-top: 22px;
+    text-align: center;
+    color: #777;
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.admin-back-link:hover {
+    color: #d56b2d;
+}
+
+@media (max-width: 600px) {
+
+    .admin-login-page {
+        padding: 45px 15px;
+    }
+
+    .admin-login-card {
+        padding: 28px 22px;
+    }
+
+    .admin-login-header h1 {
+        font-size: 26px;
+    }
+}
