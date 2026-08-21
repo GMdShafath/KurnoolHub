@@ -1328,3 +1328,193 @@ footer{
         border-radius: 14px;
     }
 }
+/* =========================================
+   PROFESSIONAL LIST YOUR BUSINESS FORM
+========================================= */
+
+.page-head {
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 70px 20px 35px;
+}
+
+.page-head .welcome {
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.page-head h1 {
+    font-family: "Manrope", sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 0 12px;
+}
+
+.page-head p {
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* FORM CONTAINER */
+
+.business-form-container {
+    max-width: 720px;
+    margin: 0 auto 70px;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #e9e9e9;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* FORM */
+
+.business-form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+
+/* FORM GROUP */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* LABEL */
+
+.form-group label {
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+}
+
+
+/* INPUT / SELECT / TEXTAREA */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #222;
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* TEXTAREA */
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.5;
+}
+
+
+/* PLACEHOLDER */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #999;
+}
+
+
+/* FOCUS */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #d56b2d;
+    box-shadow: 0 0 0 3px rgba(213, 107, 45, 0.12);
+}
+
+
+/* SMALL HELP TEXT */
+
+.form-group small {
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+}
+
+
+/* SUBMIT BUTTON */
+
+.form-submit {
+    width: 100%;
+    margin-top: 5px;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #d56b2d;
+    color: #ffffff;
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-submit:hover {
+    background: #b95720;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(213, 107, 45, 0.25);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .page-head {
+        padding: 45px 18px 25px;
+    }
+
+    .page-head h1 {
+        font-size: 32px;
+    }
+
+    .page-head p {
+        font-size: 15px;
+    }
+
+    .business-form-container {
+        margin: 0 15px 50px;
+        padding: 25px 20px;
+        border-radius: 16px;
+    }
+
+    .business-form-container form {
+        gap: 18px;
+    }
+}
