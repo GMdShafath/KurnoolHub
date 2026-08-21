@@ -696,30 +696,49 @@ def profile():
 def businesses_page():
 
     search = request.args.get("search", "").strip()
-    category = request.args.get("category", "").strip()
+    category_id = request.args.get("category_id", "").strip()
 
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
     user_id = session.get("user_id")
 
-    keyword = f"%{search}%"
-    category_keyword = f"%{category}%"
+    conditions = []
+    params = [user_id, user_id]
 
-    cursor.execute("""
+    # CATEGORY FILTER
+    if category_id:
+        conditions.append("b.category_id = %s")
+        params.append(int(category_id))
+
+    # SEARCH FILTER
+    if search:
+        keyword = f"%{search}%"
+
+        conditions.append("""
+            (
+                LOWER(b.name) LIKE LOWER(%s)
+                OR LOWER(b.description) LIKE LOWER(%s)
+                OR LOWER(c.name) LIKE LOWER(%s)
+            )
+        """)
+
+        params.extend([
+            keyword,
+            keyword,
+            keyword
+        ])
+
+    where_clause = ""
+
+    if conditions:
+        where_clause = "WHERE " + " AND ".join(conditions)
+
+    query = f"""
         SELECT
             b.id,
             b.name,
-
-            COALESCE(
-                GROUP_CONCAT(
-                    DISTINCT c2.name
-                    ORDER BY c2.name
-                    SEPARATOR ', '
-                ),
-                c.name
-            ) AS category,
-
+            c.name AS category,
             b.description,
             b.image,
 
@@ -756,48 +775,12 @@ def businesses_page():
         LEFT JOIN categories c
             ON b.category_id = c.id
 
-        LEFT JOIN business_categories bc
-            ON b.id = bc.business_id
-
-        LEFT JOIN categories c2
-            ON bc.category_id = c2.id
-
-        WHERE
-            (
-                %s = ''
-                OR LOWER(b.name) LIKE LOWER(%s)
-                OR LOWER(b.description) LIKE LOWER(%s)
-                OR LOWER(c.name) LIKE LOWER(%s)
-                OR EXISTS (
-                    SELECT 1
-                    FROM business_categories bc2
-                    INNER JOIN categories c3
-                        ON bc2.category_id = c3.id
-                    WHERE
-                        bc2.business_id = b.id
-                        AND LOWER(c3.name) LIKE LOWER(%s)
-                )
-            )
-
-        GROUP BY
-            b.id,
-            b.name,
-            b.description,
-            b.image,
-            b.rating,
-            c.name
+        {where_clause}
 
         ORDER BY b.name
+    """
 
-    """, (
-        user_id,
-        user_id,
-        search,
-        keyword,
-        keyword,
-        category_keyword,
-        category_keyword
-    ))
+    cursor.execute(query, params)
 
     businesses = cursor.fetchall()
 
@@ -811,7 +794,7 @@ def businesses_page():
         "businesses.html",
         businesses=businesses,
         search=search,
-        category=category
+        category_id=category_id
     )
 
 # =========================
