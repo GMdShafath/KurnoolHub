@@ -27,16 +27,23 @@
 
         <form method="POST">
 
+            <!-- BUSINESS NAME -->
+
             <div class="form-group">
+
                 <label>Business Name</label>
+
                 <input
                     type="text"
                     name="name"
                     placeholder="Enter business name"
                     required
                 >
+
             </div>
 
+
+            <!-- CATEGORY -->
 
             <div class="form-group">
 
@@ -61,6 +68,8 @@
             </div>
 
 
+            <!-- DESCRIPTION -->
+
             <div class="form-group">
 
                 <label>Description</label>
@@ -73,6 +82,8 @@
 
             </div>
 
+
+            <!-- ADDRESS -->
 
             <div class="form-group">
 
@@ -87,6 +98,8 @@
             </div>
 
 
+            <!-- PHONE -->
+
             <div class="form-group">
 
                 <label>Phone Number</label>
@@ -100,22 +113,45 @@
             </div>
 
 
+            <!-- BUSINESS IMAGE URL -->
+
             <div class="form-group">
 
-                <label>Business Image</label>
+                <label>Business Image URL</label>
 
                 <input
-                    type="text"
+                    type="url"
                     name="image"
-                    placeholder="Example: pista_house.png"
+                    id="businessImageUrl"
+                    placeholder="Paste your business image URL"
+                    autocomplete="off"
                 >
 
                 <small>
-                    Add the image filename from static/images/
+                    Paste a publicly accessible image link.
                 </small>
+
+
+                <!-- IMAGE PREVIEW -->
+
+                <div
+                    id="imagePreview"
+                    class="image-preview"
+                    style="display: none;"
+                >
+
+                    <img
+                        id="previewImage"
+                        src=""
+                        alt="Business Image Preview"
+                    >
+
+                </div>
 
             </div>
 
+
+            <!-- SUBMIT -->
 
             <button
                 type="submit"
@@ -129,5 +165,44 @@
     </div>
 
 </section>
+
+
+<!-- IMAGE PREVIEW SCRIPT -->
+
+<script>
+
+const imageUrlInput = document.getElementById("businessImageUrl");
+const imagePreview = document.getElementById("imagePreview");
+const previewImage = document.getElementById("previewImage");
+
+imageUrlInput.addEventListener("input", function () {
+
+    const url = this.value.trim();
+
+    if (!url) {
+
+        imagePreview.style.display = "none";
+        previewImage.src = "";
+
+        return;
+    }
+
+    previewImage.onload = function () {
+
+        imagePreview.style.display = "block";
+
+    };
+
+    previewImage.onerror = function () {
+
+        imagePreview.style.display = "none";
+
+    };
+
+    previewImage.src = url;
+
+});
+
+</script>
 
 {% endblock %}
