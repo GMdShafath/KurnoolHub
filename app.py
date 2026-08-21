@@ -691,79 +691,83 @@ def profile():
 # BUSINESSES PAGE + SEARCH
 # =========================
 
+
 @app.route("/businesses")
 def businesses_page():
 
     search = request.args.get("search", "").strip()
+    category = request.args.get("category", "").strip()
 
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
 
     user_id = session.get("user_id")
 
-    if search:
+    keyword = f"%{search}%"
+    category_keyword = f"%{category}%"
 
-        keyword = f"%{search}%"
+    cursor.execute("""
+        SELECT
+            b.id,
+            b.name,
 
-        cursor.execute("""
-            SELECT
-                b.id,
-                b.name,
+            COALESCE(
+                GROUP_CONCAT(
+                    DISTINCT c2.name
+                    ORDER BY c2.name
+                    SEPARATOR ', '
+                ),
+                c.name
+            ) AS category,
 
-                COALESCE(
-                    GROUP_CONCAT(
-                        DISTINCT c2.name
-                        ORDER BY c2.name
-                        SEPARATOR ', '
-                    ),
-                    c.name
-                ) AS category,
+            b.description,
+            b.image,
 
-                b.description,
-                b.image,
+            CASE
+                WHEN %s IS NOT NULL
+                AND EXISTS (
+                    SELECT 1
+                    FROM favorites f
+                    WHERE f.business_id = b.id
+                    AND f.user_id = %s
+                )
+                THEN 1
+                ELSE 0
+            END AS is_favorite,
 
-                CASE
-                    WHEN %s IS NOT NULL
-                    AND EXISTS (
-                        SELECT 1
-                        FROM favorites f
-                        WHERE f.business_id = b.id
-                        AND f.user_id = %s
-                    )
-                    THEN 1
-                    ELSE 0
-                END AS is_favorite,
-
-                COALESCE(
-                    (
-                        SELECT ROUND(AVG(r.rating), 1)
-                        FROM reviews r
-                        WHERE r.business_id = b.id
-                    ),
-                    b.rating,
-                    0
-                ) AS rating,
-
+            COALESCE(
                 (
-                    SELECT COUNT(*)
-                    FROM reviews r2
-                    WHERE r2.business_id = b.id
-                ) AS reviews
+                    SELECT ROUND(AVG(r.rating), 1)
+                    FROM reviews r
+                    WHERE r.business_id = b.id
+                ),
+                b.rating,
+                0
+            ) AS rating,
 
-            FROM businesses b
+            (
+                SELECT COUNT(*)
+                FROM reviews r2
+                WHERE r2.business_id = b.id
+            ) AS reviews
 
-            LEFT JOIN categories c
-                ON b.category_id = c.id
+        FROM businesses b
 
-            LEFT JOIN business_categories bc
-                ON b.id = bc.business_id
+        LEFT JOIN categories c
+            ON b.category_id = c.id
 
-            LEFT JOIN categories c2
-                ON bc.category_id = c2.id
+        LEFT JOIN business_categories bc
+            ON b.id = bc.business_id
 
-            WHERE
-                LOWER(b.name) LIKE LOWER(%s)
+        LEFT JOIN categories c2
+            ON bc.category_id = c2.id
+
+        WHERE
+            (
+                %s = ''
+                OR LOWER(b.name) LIKE LOWER(%s)
                 OR LOWER(b.description) LIKE LOWER(%s)
+                OR LOWER(c.name) LIKE LOWER(%s)
                 OR EXISTS (
                     SELECT 1
                     FROM business_categories bc2
@@ -773,96 +777,27 @@ def businesses_page():
                         bc2.business_id = b.id
                         AND LOWER(c3.name) LIKE LOWER(%s)
                 )
-                OR LOWER(c.name) LIKE LOWER(%s)
+            )
 
-            GROUP BY
-                b.id,
-                b.name,
-                b.description,
-                b.image,
-                b.rating,
-                c.name
+        GROUP BY
+            b.id,
+            b.name,
+            b.description,
+            b.image,
+            b.rating,
+            c.name
 
-            ORDER BY b.name
+        ORDER BY b.name
 
-        """, (
-            user_id,
-            user_id,
-            keyword,
-            keyword,
-            keyword,
-            keyword
-        ))
-
-    else:
-
-        cursor.execute("""
-            SELECT
-                b.id,
-                b.name,
-
-                COALESCE(
-                    GROUP_CONCAT(
-                        DISTINCT c2.name
-                        ORDER BY c2.name
-                        SEPARATOR ', '
-                    ),
-                    c.name
-                ) AS category,
-
-                b.description,
-                b.image,
-
-                CASE
-                    WHEN %s IS NOT NULL
-                    AND EXISTS (
-                        SELECT 1
-                        FROM favorites f
-                        WHERE f.business_id = b.id
-                        AND f.user_id = %s
-                    )
-                    THEN 1
-                    ELSE 0
-                END AS is_favorite,
-
-                COALESCE(
-                    (
-                        SELECT ROUND(AVG(r.rating), 1)
-                        FROM reviews r
-                        WHERE r.business_id = b.id
-                    ),
-                    b.rating,
-                    0
-                ) AS rating,
-
-                (
-                    SELECT COUNT(*)
-                    FROM reviews r2
-                    WHERE r2.business_id = b.id
-                ) AS reviews
-
-            FROM businesses b
-
-            LEFT JOIN categories c
-                ON b.category_id = c.id
-
-            LEFT JOIN business_categories bc
-                ON b.id = bc.business_id
-
-            LEFT JOIN categories c2
-                ON bc.category_id = c2.id
-
-            GROUP BY
-                b.id,
-                b.name,
-                b.description,
-                b.image,
-                b.rating,
-                c.name
-
-            ORDER BY b.name
-
-        """, (user_id, user_id))
+    """, (
+        user_id,
+        user_id,
+        search,
+        keyword,
+        keyword,
+        category_keyword,
+        category_keyword
+    ))
 
     businesses = cursor.fetchall()
 
@@ -875,7 +810,8 @@ def businesses_page():
     return render_template(
         "businesses.html",
         businesses=businesses,
-        search=search
+        search=search,
+        category=category
     )
 
 # =========================
