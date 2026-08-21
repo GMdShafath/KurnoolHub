@@ -400,7 +400,7 @@ def login():
     if request.method == "POST":
 
         email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+        password = request.form.get("password", "")
 
         if not email or not password:
             return "Email and password are required.", 400
