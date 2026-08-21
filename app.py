@@ -1367,6 +1367,36 @@ def admin_password_test():
         "hash_length": len(admin["password"])
     })
 
+@app.route("/admin/check-password")
+def admin_check_password():
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT password
+        FROM admins
+        WHERE email = %s
+    """, ("admin@kurnoolhub.com",))
+
+    admin = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if not admin:
+        return jsonify({"admin_found": False})
+
+    test_password = "shafath0099"
+
+    return jsonify({
+        "admin_found": True,
+        "hash_length": len(admin["password"]),
+        "password_match": check_password_hash(
+            admin["password"],
+            test_password
+        )
+    })
 # =========================
 # ADMIN DASHBOARD
 # =========================
