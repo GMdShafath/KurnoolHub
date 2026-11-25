@@ -1,549 +1,203 @@
 {% extends "base.html" %}
+{% from "_macros.html" import img_src, business_card, empty_state %}
 
 {% block title %}KurnoolHub — Discover Kurnool{% endblock %}
 
 {% block content %}
 
+<!-- HERO -->
 <section class="hero">
+    <div class="container hero-inner">
 
-    <div class="hero-overlay"></div>
+        <span class="welcome">Welcome to Kurnool</span>
 
-    <div class="hero-inner">
+        <h1>Discover <span>Kurnool</span>,<br>everything in one place.</h1>
 
-        <div class="welcome">
-            WELCOME TO KURNOOL
-        </div>
-
-        <h1>
-            Discover <span>Kurnool</span>
-        </h1>
-
-        <div class="script-line">
-            Everything You Need, In One Place
-        </div>
-
-        <p>
-            Find the best places, restaurants, hotels, services, events and offers
-            in and around Kurnool.
+        <p class="lead">
+            Find the best restaurants, shops, services, places, events and offers in and around the city.
         </p>
 
-
-        <div class="search">
-
-            <!-- =========================
-                 CATEGORY DROPDOWN
-            ========================= -->
-
-            <div class="category-dropdown">
-
-                <button
-                    class="category-select"
-                    type="button"
-                    onclick="toggleCategoryDropdown()"
-                >
-                    ▦ &nbsp; All Categories <span>⌄</span>
-                </button>
-
-                <div
-                    id="categoryMenu"
-                    class="category-menu"
-                    style="display:none;"
-                >
-
-                    {% for c in categories %}
-
-                    <a href="/businesses?category_id={{ c.id }}">
-                        {{ c.name }}
-                    </a>
-
-                    {% endfor %}
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 SEARCH INPUT
-            ========================= -->
-
-            <input
-                id="heroSearch"
-                placeholder="Search restaurants, places, services..."
-                onkeydown="if(event.key==='Enter')searchHome()"
-            >
-
-
-            <!-- =========================
-                 SEARCH BUTTON
-            ========================= -->
-
-            <button
-                class="search-btn"
-                onclick="searchHome()"
-            >
-                Search
-            </button>
-
+        <div class="searchbar">
+            <input id="heroSearch"
+                   type="text"
+                   placeholder="Search restaurants, places, services..."
+                   onkeydown="if(event.key==='Enter'){searchHome()}">
+            <button class="btn btn-primary" type="button" onclick="searchHome()">Search</button>
+            <button class="btn near" type="button" onclick="nearMe()">📍 Near me</button>
         </div>
 
+        <div class="location-msg" id="locationMsg"></div>
 
-        <button
-            class="near"
-            onclick="nearMe()"
-        >
-            ◉ &nbsp; Explore Near Me
-        </button>
-
-        <div id="locationMsg"></div>
+        <div class="chips">
+            {% for c in categories %}
+                <a class="chip" href="/businesses?category_id={{ c.id }}">{{ c.name }}</a>
+            {% endfor %}
+        </div>
 
     </div>
-
 </section>
 
-
-<!-- =========================
-     CATEGORIES
-========================= -->
-
-<section class="section categories">
-
-    <div class="section-title">
-
-        <h2>
-            Explore <span>Categories</span>
-        </h2>
-
-        <a href="/explore">
-            View all categories →
-        </a>
-
+<div class="stats-strip">
+    <div class="container">
+        <div class="item"><strong>{{ businesses|length }}+</strong><span>Local businesses</span></div>
+        <div class="item"><strong>{{ categories|length }}</strong><span>Categories</span></div>
+        <div class="item"><strong>{{ places|length }}+</strong><span>Places to visit</span></div>
+        <div class="item"><strong>100%</strong><span>Free to use</span></div>
     </div>
+</div>
 
 
-    <div class="category-row">
+<!-- CATEGORIES -->
+<section class="section">
+    <div class="container">
 
-        {% for c in categories %}
-
-        <a
-            class="category-card"
-            href="/explore"
-        >
-
-            <img
-                src="{% if c.image and c.image.startswith('http') %}{{ c.image }}{% else %}{{ url_for('static', filename='images/' ~ c.image) }}{% endif %}"
-                alt="{{ c.name }}"
-            >
-
-            <h3>
-                {{ c.name }}
-            </h3>
-
-            <p>
-                {{ c.desc }}
-            </p>
-
-        </a>
-
-        {% endfor %}
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     BUSINESSES
-========================= -->
-
-<section
-    class="section grey"
-    id="businesses"
->
-
-    <div class="section-title">
-
-        <h2>
-            Popular <span>Businesses</span>
-        </h2>
-
-        <a href="/businesses">
-            Explore all businesses →
-        </a>
-
-    </div>
-
-
-    <div class="business-row">
-
-        {% for b in businesses %}
-
-        <article
-            class="business-card"
-            onclick="window.location.href='/business/{{ b.id }}'"
-            style="cursor:pointer;"
-        >
-
-            <div class="business-img">
-
-                <img
-                    src="{% if b.image and b.image.startswith('http') %}{{ b.image }}{% else %}{{ url_for('static', filename='images/' ~ b.image) }}{% endif %}"
-                    alt="{{ b.name }}"
-                >
-
-                <span class="tag">
-                    {{ b.tag }}
-                </span>
-
-
-                <!-- =========================
-                     FAVORITE BUTTON
-                ========================= -->
-
-                <button
-                    class="heart {% if b.is_favorite %}liked{% endif %}"
-                    type="button"
-                    data-business-id="{{ b.id }}"
-                    onclick="event.stopPropagation(); toggleFavorite(this)"
-                >
-
-                    {% if b.is_favorite %}
-                        ♥
-                    {% else %}
-                        ♡
-                    {% endif %}
-
-                </button>
-
-            </div>
-
-
-            <div class="business-info">
-
-                <small>
-                    {{ b.category }}
-                </small>
-
-                <h3>
-                    {{ b.name }}
-                </h3>
-
-                <div class="meta">
-
-                    <b>
-                        ★ {{ b.rating }}
-                    </b>
-
-                    <span>
-                        ({{ b.reviews }})
-                    </span>
-
-                    <i>
-                        ⌖
-                    </i>
-
-                    <span>
-                        Kurnool
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-
-        {% endfor %}
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     PLACES
-========================= -->
-
-<section
-    class="section split-section"
-    id="places"
->
-
-    <div class="section-title">
-
-        <h2>
-            Popular Places <span>to Visit</span>
-        </h2>
-
-        <a href="/places">
-            View all places →
-        </a>
-
-    </div>
-
-
-    <div class="place-row">
-
-        {% for p in places %}
-
-        <article
-            class="place-card"
-            onclick="window.location.href='/place/{{ p.id }}'"
-            style="cursor:pointer;"
-        >
-
-            <img
-                src="{% if p.image and p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename='images/' ~ p.image) }}{% endif %}"
-                alt="{{ p.name }}"
-            >
-
-            <span>
-                {{ p.type }}
-            </span>
-
+        <div class="section-head">
             <div>
-
-                <h3>
-                    {{ p.name }}
-                </h3>
-
-                <p>
-                    {{ p.desc }}
-                </p>
-
+                <span class="eyebrow">Browse by interest</span>
+                <h2 class="section-title">Explore <span>Categories</span></h2>
             </div>
+            <a class="link-more" href="/explore">View all →</a>
+        </div>
 
-        </article>
-
-        {% endfor %}
+        <div class="grid grid-4">
+            {% for c in categories %}
+            <a class="category-card" href="/businesses?category_id={{ c.id }}">
+                <img src="{{ img_src(c.image) }}" alt="{{ c.name }}" loading="lazy">
+                <div class="cat-info">
+                    <h3>{{ c.name }}</h3>
+                    <p>{{ c.desc }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
 
     </div>
-
 </section>
 
 
-<!-- =========================
-     EVENTS
-========================= -->
+<!-- BUSINESSES -->
+<section class="section alt" id="businesses">
+    <div class="container">
 
-<section
-    class="section grey"
-    id="events"
->
+        <div class="section-head">
+            <div>
+                <span class="eyebrow">Handpicked for you</span>
+                <h2 class="section-title">Popular <span>Businesses</span></h2>
+            </div>
+            <a class="link-more" href="/businesses">See all businesses →</a>
+        </div>
 
-    <div class="section-title">
-
-        <h2>
-            Upcoming <span>Events</span>
-        </h2>
-
-        <a href="/events">
-            View all events →
-        </a>
+        <div class="grid grid-4">
+            {% for b in businesses %}
+                {{ business_card(b) }}
+            {% else %}
+                {{ empty_state("🏪", "No businesses yet", "Be the first to list your business.", "/list-business", "List your business") }}
+            {% endfor %}
+        </div>
 
     </div>
+</section>
 
 
-    {% if events %}
+<!-- PLACES -->
+<section class="section" id="places">
+    <div class="container">
 
+        <div class="section-head">
+            <div>
+                <span class="eyebrow">Sightseeing</span>
+                <h2 class="section-title">Places to <span>Visit</span></h2>
+            </div>
+            <a class="link-more" href="/places">View all places →</a>
+        </div>
+
+        <div class="grid grid-3">
+            {% for p in places %}
+            <article class="card clickable" onclick="window.location.href='/place/{{ p.id }}'">
+                <div class="card-media">
+                    <img src="{{ img_src(p.image) }}" alt="{{ p.name }}" loading="lazy">
+                    <span class="tag">{{ p.type }}</span>
+                </div>
+                <div class="card-body">
+                    <h3>{{ p.name }}</h3>
+                    <p>{{ p.desc }}</p>
+                    {% if p.location %}<div class="card-meta"><span class="meta">📍 {{ p.location }}</span></div>{% endif %}
+                </div>
+            </article>
+            {% else %}
+                {{ empty_state("🗺️", "No places yet", "Places will appear here soon.") }}
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+
+<!-- EVENTS -->
+<section class="section alt" id="events">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <span class="eyebrow">What's on</span>
+                <h2 class="section-title">Upcoming <span>Event</span></h2>
+            </div>
+            <a class="link-more" href="/events">All events →</a>
+        </div>
+
+        {% if events %}
         {% set event = events[0] %}
-
         <div class="event-feature">
 
-
-            <!-- EVENT IMAGE -->
-
-            <div
-                class="event-photo"
-                {% if event.image %}
-                style="
-                    background-image: url('{{ url_for('static', filename='images/' ~ event.image) }}');
-                    background-size: cover;
-                    background-position: center;
-                "
-                {% endif %}
-            ></div>
-
-
-            <!-- EVENT DETAILS -->
+            <div class="event-photo"
+                 {% if event.image %}style="background-image:url('{{ img_src(event.image) }}')"{% endif %}>
+                <div class="datebox">
+                    <b>{{ event.event_date.strftime('%b')|upper }}</b>
+                    <span>{{ event.event_date.strftime('%d') }}</span>
+                </div>
+            </div>
 
             <div class="event-details">
-
-                <div class="datebox">
-
-                    <b>
-                        {{ event.event_date.strftime('%b')|upper }}
-                    </b>
-
-                    <strong>
-                        {{ event.event_date.strftime('%d') }}
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <small>
-                        UPCOMING EVENT
-                    </small>
-
-                    <h3>
-                        {{ event.title }}
-                    </h3>
-
-
-                    {% if event.description %}
-
-                    <p>
-                        {{ event.description }}
-                    </p>
-
-                    {% endif %}
-
-
-                    <p>
-                        📅 {{ event.event_date.strftime('%B %d, %Y') }}
-
-                        &nbsp; • &nbsp;
-
-                        📍 {{ event.location }}
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="/events"
-                    style="
-                        text-decoration:none;
-                        border:1px solid #f0c0b2;
-                        color:var(--orange);
-                        background:#fff;
-                        border-radius:8px;
-                        padding:10px 13px;
-                        font-size:10px;
-                        font-weight:800;
-                    "
-                >
-                    View Event →
-                </a>
-
+                <span class="eyebrow">Featured event</span>
+                <h3>{{ event.title }}</h3>
+                {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+                <p class="info">📅 {{ event.event_date.strftime('%B %d, %Y') }}</p>
+                {% if event.location %}<p class="info">📍 {{ event.location }}</p>{% endif %}
+                <a class="btn btn-brand" href="/events">View all events</a>
             </div>
 
         </div>
+        {% else %}
+            {{ empty_state("📅", "No upcoming events", "Check back soon for new events in Kurnool.") }}
+        {% endif %}
+
+    </div>
+</section>
 
 
-    {% else %}
+<!-- CTA -->
+<section class="section" id="offers">
+    <div class="container">
 
-        <div style="
-            text-align:center;
-            padding:40px 20px;
-        ">
-
-            <h3>
-                No upcoming events
-            </h3>
-
-            <p>
-                Check back later for upcoming events in Kurnool.
-            </p>
-
+        <div class="cta">
+            <div>
+                <span class="eyebrow">For local business owners</span>
+                <h2>Put your business <span>on the Kurnool map.</span></h2>
+                <p>Reach more local customers with a professional business listing and promote your latest offers.</p>
+            </div>
+            <a class="btn btn-primary" href="/list-business">List your business →</a>
         </div>
 
-    {% endif %}
-
-</section>
-
-<!-- =========================
-     BUSINESS OFFERS
-========================= -->
-
-<section
-    class="offer"
-    id="offers"
->
-
-    <div>
-
-        <small>
-            FOR LOCAL BUSINESS OWNERS
-        </small>
-
-        <h2>
-            Put your business<br>
-            on the Kurnool map.
-        </h2>
-
-        <p>
-            Reach more local customers with a professional business listing.
-        </p>
+        <div class="cta">
+            <div>
+                <span class="eyebrow">Deals nearby</span>
+                <h2>Don't miss <span>local offers.</span></h2>
+                <p>See special deals from restaurants, cafes and shops around Kurnool.</p>
+            </div>
+            <a class="btn btn-ghost" href="/offers">View offers →</a>
+        </div>
 
     </div>
-
-
-    <a
-        href="/offers"
-        style="
-            background:var(--orange);
-            border:0;
-            color:#fff;
-            border-radius:9px;
-            padding:13px 18px;
-            font-size:10px;
-            font-weight:900;
-            text-decoration:none;
-        "
-    >
-        View Offers →
-    </a>
-
 </section>
-
-
-<!-- =========================
-     LIST YOUR BUSINESS
-========================= -->
-
-<section
-    class="offer"
-    style="margin-top:0;"
->
-
-    <div>
-
-        <small>
-            FOR LOCAL BUSINESS OWNERS
-        </small>
-
-        <h2>
-            List your business<br>
-            on KurnoolHub.
-        </h2>
-
-        <p>
-            Reach more local customers with a professional business listing.
-        </p>
-
-    </div>
-
-
-    <a
-        href="/list-business"
-        style="
-            background:var(--orange);
-            border:0;
-            color:#fff;
-            border-radius:9px;
-            padding:13px 18px;
-            font-size:10px;
-            font-weight:900;
-            text-decoration:none;
-        "
-    >
-        List Your Business →
-    </a>
-
-</section>
-
 
 {% endblock %}

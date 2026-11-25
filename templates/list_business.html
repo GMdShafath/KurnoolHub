@@ -1,208 +1,88 @@
 {% extends "base.html" %}
+{% from "_macros.html" import page_head %}
 
 {% block title %}List Your Business — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="page-head">
-
-    <div class="welcome">
-        FOR LOCAL BUSINESS OWNERS
-    </div>
-
-    <h1>
-        List Your Business
-    </h1>
-
-    <p>
-        Add your business to KurnoolHub and reach more local customers.
-    </p>
-
-</section>
-
+{{ page_head("For business owners", "List Your <span>Business</span>", "Get discovered by thousands of local customers in Kurnool — it only takes a minute.") }}
 
 <section class="section">
+    <div class="container">
 
-    <div class="business-form-container">
+        <div class="form-card">
+            <form method="POST">
 
-        <form method="POST">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="name">Business name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter business name" required>
+                    </div>
 
-            <!-- BUSINESS NAME -->
-
-            <div class="form-group">
-
-                <label>Business Name</label>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter business name"
-                    required
-                >
-
-            </div>
-
-
-            <!-- CATEGORY -->
-
-            <div class="form-group">
-
-                <label>Category</label>
-
-                <select name="category_id" required>
-
-                    <option value="">
-                        Select Category
-                    </option>
-
-                    {% for c in categories %}
-
-                    <option value="{{ c.id }}">
-                        {{ c.name }}
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-
-            <!-- DESCRIPTION -->
-
-            <div class="form-group">
-
-                <label>Description</label>
-
-                <textarea
-                    name="description"
-                    placeholder="Describe your business"
-                    rows="5"
-                ></textarea>
-
-            </div>
-
-
-            <!-- ADDRESS -->
-
-            <div class="form-group">
-
-                <label>Address</label>
-
-                <input
-                    type="text"
-                    name="address"
-                    placeholder="Enter business address"
-                >
-
-            </div>
-
-
-            <!-- PHONE -->
-
-            <div class="form-group">
-
-                <label>Phone Number</label>
-
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Enter phone number"
-                >
-
-            </div>
-
-
-            <!-- BUSINESS IMAGE URL -->
-
-            <div class="form-group">
-
-                <label>Business Image URL</label>
-
-                <input
-                    type="url"
-                    name="image"
-                    id="businessImageUrl"
-                    placeholder="Paste your business image URL"
-                    autocomplete="off"
-                >
-
-                <small>
-                    Paste a publicly accessible image link.
-                </small>
-
-
-                <!-- IMAGE PREVIEW -->
-
-                <div
-                    id="imagePreview"
-                    class="image-preview"
-                    style="display: none;"
-                >
-
-                    <img
-                        id="previewImage"
-                        src=""
-                        alt="Business Image Preview"
-                    >
-
+                    <div class="field">
+                        <label for="category_id">Category</label>
+                        <select id="category_id" name="category_id" required>
+                            <option value="">Select category</option>
+                            {% for c in categories %}
+                                <option value="{{ c.id }}">{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
 
-            </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Describe your business"></textarea>
+                </div>
 
+                <div class="form-row">
+                    <div class="field">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="Enter business address">
+                    </div>
 
-            <!-- SUBMIT -->
+                    <div class="field">
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" name="phone" placeholder="Enter phone number">
+                    </div>
+                </div>
 
-            <button
-                type="submit"
-                class="form-submit"
-            >
-                Submit Business →
-            </button>
+                <div class="field">
+                    <label for="businessImageUrl">Image URL</label>
+                    <input type="url" name="image" id="businessImageUrl" placeholder="Paste your business image URL">
+                </div>
 
-        </form>
+                <div class="image-preview" id="imagePreview">
+                    <img id="previewImage" alt="Image preview">
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit">Submit business</button>
+
+            </form>
+        </div>
 
     </div>
-
 </section>
 
 
-<!-- IMAGE PREVIEW SCRIPT -->
-
 <script>
-
 const imageUrlInput = document.getElementById("businessImageUrl");
 const imagePreview = document.getElementById("imagePreview");
 const previewImage = document.getElementById("previewImage");
 
 imageUrlInput.addEventListener("input", function () {
-
     const url = this.value.trim();
 
     if (!url) {
-
         imagePreview.style.display = "none";
         previewImage.src = "";
-
         return;
     }
 
-    previewImage.onload = function () {
-
-        imagePreview.style.display = "block";
-
-    };
-
-    previewImage.onerror = function () {
-
-        imagePreview.style.display = "none";
-
-    };
-
+    previewImage.onload = function () { imagePreview.style.display = "block"; };
+    previewImage.onerror = function () { imagePreview.style.display = "none"; };
     previewImage.src = url;
-
 });
-
 </script>
 
 {% endblock %}

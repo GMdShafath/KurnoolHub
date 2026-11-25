@@ -1,6 +1,6 @@
 function toggleNav() {
     const n = document.getElementById("navlinks");
-    n.classList.toggle("open");
+    if (n) { n.classList.toggle("open"); }
 }
 
 
@@ -70,7 +70,7 @@ async function toggleFavorite(button) {
 
             if (data.favorite) {
 
-                button.textContent = "♥";
+                button.textContent = button.classList.contains("detail-save") ? "♥ Saved" : "♥";
 
                 button.classList.add("liked");
 
@@ -78,7 +78,7 @@ async function toggleFavorite(button) {
 
             } else {
 
-                button.textContent = "♡";
+                button.textContent = button.classList.contains("detail-save") ? "♡ Save" : "♡";
 
                 button.classList.remove("liked");
 
@@ -172,6 +172,8 @@ function nearMe() {
     const m =
         document.getElementById("locationMsg");
 
+    if (!m) { return; }
+
     if (!navigator.geolocation) {
 
         m.textContent =
@@ -205,9 +207,21 @@ function nearMe() {
 function toggleCategoryDropdown() {
     const menu = document.getElementById("categoryMenu");
 
-    if (menu.style.display === "none" || menu.style.display === "") {
-        menu.style.display = "block";
-    } else {
+    if (!menu) { return; }
+
+    if (menu.style.display === "grid") {
         menu.style.display = "none";
+    } else {
+        menu.style.display = "grid";
     }
 }
+
+// Dropdown ke bahar click karne par close
+document.addEventListener("click", function (event) {
+    const dropdown = document.querySelector(".category-dropdown");
+    const menu = document.getElementById("categoryMenu");
+
+    if (menu && dropdown && !dropdown.contains(event.target)) {
+        menu.style.display = "none";
+    }
+});

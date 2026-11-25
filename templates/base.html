@@ -1,315 +1,114 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="KurnoolHub — Discover businesses, places, events and services in Kurnool.">
+    <meta name="theme-color" content="#0b5c57">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+    <title>{% block title %}KurnoolHub{% endblock %}</title>
 
-    <meta name="description"
-          content="KurnoolHub — Discover businesses, places, events and services in Kurnool.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <title>
-        {% block title %}KurnoolHub{% endblock %}
-    </title>
-
-
-    <!-- Google Fonts -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap"
-        rel="stylesheet">
-
-
-    <!-- Main CSS -->
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}">
-
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 
 <body>
 
+{% set path = request.path %}
 
-<!-- =========================
-     HEADER
-========================= -->
-
-<header>
-
-    <div class="mini-bar">
-
-        <span>
-            📍 Kurnool, AP
-        </span>
-
-        <span>
-            Discover • Explore • Connect
-        </span>
-
+<div class="topbar">
+    <div class="container">
+        <span>📍 Kurnool, Andhra Pradesh</span>
+        <span>Discover • Explore • Connect</span>
     </div>
+</div>
 
+<header class="site-header">
+    <div class="container nav">
 
-    <nav class="nav">
-
-        <a class="logo" href="/">
-
-            <b>Kurnool</b>
-            <strong>Hub</strong>
-
-            <small>
-                Discover • Explore • Connect
-            </small>
-
+        <a class="logo" href="/" aria-label="KurnoolHub home">
+            <span class="logo-mark">K</span>
+            <span class="logo-text">
+                <b>Kurnool<span>Hub</span></b>
+                <small>Your city, simplified</small>
+            </span>
         </a>
 
-
-        <div
-            class="navlinks"
-            id="navlinks"
-        >
-
-            <a href="/">
-                Home
-            </a>
-
-            <a href="/explore">
-                Explore
-            </a>
-
-            <a href="/businesses">
-                Businesses
-            </a>
-
-            <a href="/places">
-                Places
-            </a>
-
-            <a href="/events">
-                Events
-            </a>
-
-            <a href="/offers">
-                Offers
-            </a>
-
-            <a href="/news">
-                News
-            </a>
-
-        </div>
-
+        <nav class="navlinks" id="navlinks" aria-label="Main">
+            <a href="/" class="{{ 'active' if path == '/' }}">Home</a>
+            <a href="/explore" class="{{ 'active' if path.startswith('/explore') }}">Explore</a>
+            <a href="/businesses" class="{{ 'active' if path.startswith('/business') }}">Businesses</a>
+            <a href="/places" class="{{ 'active' if path.startswith('/place') }}">Places</a>
+            <a href="/events" class="{{ 'active' if path.startswith('/events') }}">Events</a>
+            <a href="/offers" class="{{ 'active' if path.startswith('/offers') }}">Offers</a>
+            <a href="/news" class="{{ 'active' if path.startswith('/news') }}">News</a>
+        </nav>
 
         <div class="navright">
-
-
-            <!-- =========================
-                 FAVORITES
-            ========================= -->
-
-            <a
-                class="icon-btn"
-                href="/favorites"
-                style="text-decoration:none;"
-                title="My Favorites"
-            >
-                Favorites
-            </a>
-
-
-            <!-- =========================
-                 LIST YOUR BUSINESS
-            ========================= -->
-
-            <a
-                class="icon-btn"
-                href="/list-business"
-                style="text-decoration:none;"
-                title="List Your Business"
-            >
-                List Your Business
-            </a>
-
-
-            <!-- =========================
-                 LOGIN / USER
-            ========================= -->
+            <a class="btn btn-outline btn-sm" href="/favorites">♡ Favorites</a>
+            <a class="btn btn-outline btn-sm" href="/list-business">List Your Business</a>
 
             {% if session.get("user_id") %}
-
-                <a
-                    class="login"
-                    href="/profile"
-                    style="text-decoration:none;"
-                    title="My Account"
-                >
-                    👤 {{ session.get("user_name") }}
+                <a class="btn btn-brand btn-sm" href="/profile" title="My account">
+                    👤 <span class="login-name">{{ session.get("user_name") }}</span>
                 </a>
-
-                <a
-                    class="login"
-                    href="/logout"
-                >
-                    Logout
-                </a>
-
+                <a class="btn btn-outline btn-sm" href="/logout">Logout</a>
             {% else %}
-
-                <a
-                    class="login"
-                    href="/login"
-                >
-                    ♙ Login
-                </a>
-
+                <a class="btn btn-primary btn-sm" href="/login">Login</a>
             {% endif %}
 
-
-            <!-- MOBILE MENU -->
-
-            <button
-                class="hamb"
-                type="button"
-                onclick="toggleNav()"
-            >
-                ☰
-            </button>
-
+            <button class="hamb" type="button" onclick="toggleNav()" aria-label="Toggle menu">☰</button>
         </div>
 
-    </nav>
-
+    </div>
 </header>
 
+<main>
+{% block content %}{% endblock %}
+</main>
 
-<!-- =========================
-     PAGE CONTENT
-========================= -->
-
-{% block content %}
-
-{% endblock %}
-
-
-<!-- =========================
-     FOOTER
-========================= -->
-
-<footer>
-
-    <div class="footer-top">
-
+<footer class="site-footer" id="contact">
+    <div class="container footer-top">
 
         <div>
-
-            <a
-                class="footer-logo"
-                href="/"
-            >
-                Kurnool<strong>Hub</strong>
-            </a>
-
-            <p>
-                Discover local. Support local. Experience Kurnool.
-            </p>
-
+            <a class="footer-logo" href="/">Kurnool<span>Hub</span></a>
+            <p>Discover local. Support local. Experience Kurnool — the city's businesses, places and events in one place.</p>
         </div>
-
 
         <div>
-
-            <h4>
-                Explore
-            </h4>
-
-            <a href="/explore">
-                Categories
-            </a>
-
-            <a href="/businesses">
-                Businesses
-            </a>
-
-            <a href="/places">
-                Places
-            </a>
-
+            <h4>Explore</h4>
+            <a href="/explore">Categories</a>
+            <a href="/businesses">Businesses</a>
+            <a href="/places">Places</a>
+            <a href="/events">Events</a>
         </div>
-
 
         <div>
-
-            <h4>
-                For Businesses
-            </h4>
-
-            <a href="/list-business">
-                List your business
-            </a>
-
-            <a href="/offers">
-                Promote an offer
-            </a>
-
+            <h4>For Businesses</h4>
+            <a href="/list-business">List your business</a>
+            <a href="/offers">Promote an offer</a>
+            <a href="/admin/login">Admin login</a>
         </div>
-
 
         <div>
-
-            <h4>
-                Connect
-            </h4>
-
-            <a href="/news">
-                Local updates
-            </a>
-
-            <a href="/#contact">
-                Contact
-            </a>
-
+            <h4>Connect</h4>
+            <a href="/news">Local updates</a>
+            <a href="/favorites">My favorites</a>
+            <a href="/profile">My account</a>
         </div>
-
 
     </div>
 
-
-    <div class="footer-bottom">
-
-        <span>
-            © 2026 KurnoolHub
-        </span>
-
-        <span>
-            Built for Kurnool, Andhra Pradesh
-        </span>
-
+    <div class="container footer-bottom">
+        <span>© 2026 KurnoolHub. All rights reserved.</span>
+        <span>Built for Kurnool, Andhra Pradesh</span>
     </div>
-
 </footer>
 
-
-<!-- =========================
-     JAVASCRIPT
-========================= -->
-
-<script
-    src="{{ url_for('static', filename='js/app.js') }}">
-</script>
-
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </body>
-
 </html>

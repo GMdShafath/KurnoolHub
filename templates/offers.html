@@ -1,118 +1,46 @@
 {% extends "base.html" %}
+{% from "_macros.html" import page_head %}
 
 {% block title %}Offers — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="page-head">
-
-    <div class="welcome">
-        LOCAL OFFERS
-    </div>
-
-    <h1>
-        Offers in Kurnool
-    </h1>
-
-    <p>
-        Discover special offers and deals from local businesses.
-    </p>
-
-</section>
-
+{{ page_head("Local offers", "Offers in <span>Kurnool</span>", "Discover special offers and deals from local businesses.") }}
 
 <section class="section">
+    <div class="container">
 
-    <div class="section-title">
+        <div class="grid grid-3">
 
-        <h2>
-            Latest <span>Offers</span>
-        </h2>
+            <article class="card clickable offer-card" onclick="window.location.href='/business/1'">
+                <div class="card-media">
+                    <img src="{{ url_for('static', filename='images/pista_house.png') }}" alt="Pista House" loading="lazy">
+                    <span class="tag">Special offer</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-cat">Food</span>
+                    <h3>Pista House</h3>
+                    <p>Check out the latest offers and special deals available at Pista House.</p>
+                    <a class="link-more" href="/business/1">View business →</a>
+                </div>
+            </article>
 
-    </div>
+            <article class="card clickable offer-card" onclick="window.location.href='/business/2'">
+                <div class="card-media">
+                    <img src="{{ url_for('static', filename='images/Forza_cafe.jpg') }}" alt="Forza Cafe" loading="lazy">
+                    <span class="tag">Special offer</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-cat">Cafe</span>
+                    <h3>Forza Cafe</h3>
+                    <p>Explore available offers and deals from Forza Cafe.</p>
+                    <a class="link-more" href="/business/2">View business →</a>
+                </div>
+            </article>
 
-
-    <div class="business-row">
-
-        <article class="business-card">
-
-            <div class="business-img">
-
-                <img
-                    src="{{ url_for('static', filename='images/pista_house.png') }}"
-                    alt="Pista House"
-                >
-
-                <span class="tag">
-                    SPECIAL OFFER
-                </span>
-
-            </div>
-
-
-            <div class="business-info">
-
-                <small>
-                    FOOD
-                </small>
-
-                <h3>
-                    Pista House
-                </h3>
-
-                <p>
-                    Check out the latest offers and special deals available at Pista House.
-                </p>
-
-                <a href="/business/1">
-                    View Business →
-                </a>
-
-            </div>
-
-        </article>
-
-
-        <article class="business-card">
-
-            <div class="business-img">
-
-                <img
-                    src="{{ url_for('static', filename='images/forza_cafe.jpg') }}"
-                    alt="Forza Cafe"
-                >
-
-                <span class="tag">
-                    SPECIAL OFFER
-                </span>
-
-            </div>
-
-
-            <div class="business-info">
-
-                <small>
-                    CAFE
-                </small>
-
-                <h3>
-                    Forza Cafe
-                </h3>
-
-                <p>
-                    Explore available offers and deals from Forza Cafe.
-                </p>
-
-                <a href="/business/2">
-                    View Business →
-                </a>
-
-            </div>
-
-        </article>
+        </div>
 
     </div>
-
 </section>
 
 {% endblock %}

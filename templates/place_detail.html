@@ -1,123 +1,56 @@
 {% extends "base.html" %}
+{% from "_macros.html" import img_src %}
 
 {% block title %}{{ place.name }} — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="business-detail-page">
+<section class="detail-hero">
+    <div class="container">
 
-    <div class="business-detail-container">
+        <a class="detail-back" href="/places">← Back to Places</a>
 
-        <!-- PLACE IMAGE -->
+        <div class="detail-grid">
 
-        <div class="business-detail-image">
-
-            <img
-                src="{% if place.image and place.image.startswith('http') %}{{ place.image }}{% else %}{{ url_for('static', filename='images/' ~ place.image) }}{% endif %}"
-                alt="{{ place.name }}"
-            >
-
-        </div>
-
-
-        <!-- PLACE DETAILS -->
-
-        <div class="business-detail-content">
-
-            <div class="detail-category">
-                {{ place.type or "Place" }}
+            <div class="detail-image">
+                <img src="{{ img_src(place.image) }}" alt="{{ place.name }}">
             </div>
 
+            <div class="detail-content">
 
-            <h1>
-                {{ place.name }}
-            </h1>
+                <span class="detail-category">{{ place.type or "Place" }}</span>
 
+                <h1>{{ place.name }}</h1>
 
-            {% if place.desc %}
+                {% if place.desc %}<p class="detail-description">{{ place.desc }}</p>{% endif %}
 
-            <p class="detail-description">
-                {{ place.desc }}
-            </p>
+                <div class="detail-info">
+                    {% if place.location %}
+                    <div class="info-item">
+                        <span class="detail-icon">📍</span>
+                        <div><small>Location</small><p>{{ place.location }}</p></div>
+                    </div>
+                    {% endif %}
 
-            {% endif %}
+                    <div class="info-item">
+                        <span class="detail-icon">🏙️</span>
+                        <div><small>City</small><p>Kurnool, Andhra Pradesh</p></div>
+                    </div>
+                </div>
 
-
-            {% if place.location %}
-
-            <div class="detail-info">
-
-                <span class="detail-icon">
-                    📍
-                </span>
-
-                <div>
-
-                    <strong>
-                        Location
-                    </strong>
-
-                    <p>
-                        {{ place.location }}
-                    </p>
-
+                <div class="detail-buttons">
+                    {% if place.location %}
+                    <a class="btn btn-primary"
+                       href="https://www.google.com/maps/search/?api=1&query={{ place.location | urlencode }}"
+                       target="_blank" rel="noopener">🗺️ Get directions</a>
+                    {% endif %}
+                    <a class="btn btn-outline" href="/places">More places</a>
                 </div>
 
             </div>
-
-            {% endif %}
-
-
-            <div class="detail-info">
-
-                <span class="detail-icon">
-                    📍
-                </span>
-
-                <div>
-
-                    <strong>
-                        City
-                    </strong>
-
-                    <p>
-                        Kurnool, Andhra Pradesh
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="detail-buttons">
-
-                {% if place.location %}
-
-                <a
-                    href="https://www.google.com/maps/search/?api=1&query={{ place.location | urlencode }}"
-                    target="_blank"
-                    class="detail-call"
-                >
-                    🗺️ Get Directions
-                </a>
-
-                {% endif %}
-
-            </div>
-
         </div>
 
     </div>
-
-</section>
-
-
-<section class="detail-back">
-
-    <a href="/places">
-        ← Back to Places
-    </a>
-
 </section>
 
 {% endblock %}

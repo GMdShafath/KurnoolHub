@@ -1,84 +1,34 @@
 {% extends "base.html" %}
+{% from "_macros.html" import img_src, page_head, empty_state %}
 
 {% block title %}Places — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="page-head">
-
-    <div class="welcome">
-        EXPLORE KURNOOL
-    </div>
-
-    <h1>
-        Places to Visit
-    </h1>
-
-    <p>
-        Discover beautiful and popular places in and around Kurnool.
-    </p>
-
-</section>
-
+{{ page_head("Sightseeing", "Places to <span>Visit</span>", "Forts, sanctuaries and landmarks that make Kurnool special.") }}
 
 <section class="section">
+    <div class="container">
 
-    <div class="section-title">
-
-        <h2>
-            Popular <span>Places</span>
-        </h2>
-
-    </div>
-
-
-    <div class="place-row">
-
-        {% for p in places %}
-
-        <article class="place-card">
-
-            <img
-                src="{% if p.image and p.image.startswith('http') %}{{ p.image }}{% else %}{{ url_for('static', filename='images/' ~ p.image) }}{% endif %}"
-                alt="{{ p.name }}"
-            >
-
-            <span>
-                {{ p.type }}
-            </span>
-
-            <div>
-
-                <h3>
-                    {{ p.name }}
-                </h3>
-
-                <p>
-                    {{ p.desc }}
-                </p>
-
-                {% if p.location %}
-
-                <p>
-                    📍 {{ p.location }}
-                </p>
-
-                {% endif %}
-
-            </div>
-
-        </article>
-
-        {% else %}
-
-        <p>
-            No places available yet.
-        </p>
-
-        {% endfor %}
+        <div class="grid grid-3">
+            {% for p in places %}
+            <article class="card clickable" onclick="window.location.href='/place/{{ p.id }}'">
+                <div class="card-media">
+                    <img src="{{ img_src(p.image) }}" alt="{{ p.name }}" loading="lazy">
+                    <span class="tag">{{ p.type }}</span>
+                </div>
+                <div class="card-body">
+                    <h3>{{ p.name }}</h3>
+                    <p>{{ p.desc }}</p>
+                    {% if p.location %}<div class="card-meta"><span class="meta">📍 {{ p.location }}</span></div>{% endif %}
+                </div>
+            </article>
+            {% else %}
+                {{ empty_state("🗺️", "No places yet", "Places will appear here soon.") }}
+            {% endfor %}
+        </div>
 
     </div>
-
 </section>
 
 {% endblock %}

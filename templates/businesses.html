@@ -1,137 +1,32 @@
 {% extends "base.html" %}
+{% from "_macros.html" import business_card, page_head, empty_state %}
 
 {% block title %}Businesses — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="page-head">
+{% call page_head("Directory", "Local <span>Businesses</span>", "Restaurants, shops, clinics and services — all verified local listings in Kurnool.") %}
+<div class="searchbar">
+    <input id="businessInput"
+           type="text"
+           placeholder="Search businesses..."
+           value="{{ search }}"
+           oninput="filterBusinesses()">
+</div>
+{% endcall %}
 
-    <div class="welcome">
-        LOCAL BUSINESSES
-    </div>
+<section class="section">
+    <div class="container">
 
-    <h1>
-        Find places you can discover and trust.
-    </h1>
-
-    <p>
-        Explore local businesses across Kurnool.
-    </p>
-
-    <div class="mini-search">
-
-        <span>⌕</span>
-
-        <input
-            id="businessInput"
-            placeholder="Search businesses..."
-            value="{{ search }}"
-            oninput="filterBusinesses()"
-        >
-
-    </div>
-
-</section>
-
-
-<section class="section grey">
-
-    <div
-        class="business-row"
-        id="businessGrid"
-    >
-
-        {% for b in businesses %}
-
-        <article
-            class="business-card business-item"
-            data-name="{{ b.name }} {{ b.category }}"
-            onclick="window.location.href='/business/{{ b.id }}'"
-            style="cursor:pointer;"
-        >
-
-            <div class="business-img">
-
-                <img
-                    src="{% if b.image and b.image.startswith('http') %}{{ b.image }}{% else %}{{ url_for('static', filename='images/' ~ b.image) }}{% endif %}"
-                    alt="{{ b.name }}"
-                >
-
-                <span class="tag">
-                    {{ b.tag }}
-                </span>
-
-
-                <!-- =========================
-                     FAVORITE BUTTON
-                ========================= -->
-
-                <button
-                    class="heart"
-                    type="button"
-                    data-business-id="{{ b.id }}"
-                    onclick="event.stopPropagation(); toggleFavorite(this)"
-                >
-                    ♡
-                </button>
-
-            </div>
-
-
-            <div class="business-info">
-
-                <small>
-                    {{ b.category }}
-                </small>
-
-                <h3>
-                    {{ b.name }}
-                </h3>
-
-                <div class="meta">
-
-                    <b>
-                        ★ {{ b.rating }}
-                    </b>
-
-                    <span>
-                        ({{ b.reviews }})
-                    </span>
-
-                    <span>
-                        ⌖ Kurnool
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-
-        {% else %}
-
-        <div
-            style="
-                width:100%;
-                text-align:center;
-                padding:50px 20px;
-            "
-        >
-
-            <h3>
-                No businesses found
-            </h3>
-
-            <p>
-                Try searching for another business or category.
-            </p>
-
+        <div class="grid grid-4" id="businessGrid">
+            {% for b in businesses %}
+                {{ business_card(b) }}
+            {% else %}
+                {{ empty_state("🔍", "No businesses found", "Try a different search or browse all categories.", "/explore", "Explore categories") }}
+            {% endfor %}
         </div>
 
-        {% endfor %}
-
     </div>
-
 </section>
 
 {% endblock %}

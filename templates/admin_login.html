@@ -5,81 +5,32 @@
 {% block content %}
 
 <section class="admin-login-page">
-
     <div class="admin-login-card">
 
         <div class="admin-login-header">
-
-            <div class="admin-badge">
-                ADMIN
-            </div>
-
-            <h1>
-                Welcome Back
-            </h1>
-
-            <p>
-                Sign in to manage KurnoolHub.
-            </p>
-
+            <span class="admin-badge">Admin</span>
+            <h1>Admin login</h1>
+            <p>Sign in to manage KurnoolHub.</p>
         </div>
-
 
         <form method="POST">
 
-            <div class="admin-form-group">
-
-                <label for="email">
-                    Email Address
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Enter admin email"
-                    required
-                >
-
+            <div class="field">
+                <label for="email">Admin email</label>
+                <input type="email" id="email" name="email" placeholder="Enter admin email" required>
             </div>
 
-
-            <div class="admin-form-group">
-
-                <label for="password">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter admin password"
-                    required
-                >
-
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter admin password" required>
             </div>
 
-
-            <button
-                type="submit"
-                class="admin-login-button"
-            >
-                Sign In
-            </button>
-
+            <button class="btn btn-primary btn-block" type="submit">Login to dashboard</button>
         </form>
 
-
-        <a
-            href="/"
-            class="admin-back-link"
-        >
-            ← Back to KurnoolHub
-        </a>
+        <a class="admin-back-link" href="/">← Back to website</a>
 
     </div>
-
 </section>
 
 {% endblock %}

@@ -1,118 +1,41 @@
 {% extends "base.html" %}
+{% from "_macros.html" import page_head %}
 
 {% block title %}News — KurnoolHub{% endblock %}
 
 {% block content %}
 
-<section class="page-head">
-
-    <div class="welcome">
-        KURNOOL UPDATES
-    </div>
-
-    <h1>
-        Latest News
-    </h1>
-
-    <p>
-        Stay updated with local news, events and happenings around Kurnool.
-    </p>
-
-</section>
-
+{{ page_head("Kurnool updates", "Latest <span>News</span>", "Stay updated with local news, events and happenings around Kurnool.") }}
 
 <section class="section">
+    <div class="container">
 
-    <div class="section-title">
+        <div class="grid grid-3">
 
-        <h2>
-            Latest <span>Updates</span>
-        </h2>
+            <article class="news-card">
+                <span class="card-cat">Kurnool</span>
+                <h3>Kurnool Local Updates</h3>
+                <p>Stay connected with important local updates and happenings around Kurnool.</p>
+                <span class="meta">📅 2026</span>
+            </article>
 
-    </div>
+            <article class="news-card">
+                <span class="card-cat">Events</span>
+                <h3>Kurnool Utsav Updates</h3>
+                <p>Get the latest information about upcoming events and celebrations in Kurnool.</p>
+                <a class="link-more" href="/events">View events →</a>
+            </article>
 
+            <article class="news-card">
+                <span class="card-cat">Local business</span>
+                <h3>Discover Local Businesses</h3>
+                <p>Explore restaurants, services, shops and other businesses available on KurnoolHub.</p>
+                <a class="link-more" href="/businesses">Explore businesses →</a>
+            </article>
 
-    <div class="business-row">
-
-        <article class="business-card">
-
-            <div class="business-info">
-
-                <small>
-                    KURNOOL
-                </small>
-
-                <h3>
-                    Kurnool Local Updates
-                </h3>
-
-                <p>
-                    Stay connected with important local updates and happenings
-                    around Kurnool.
-                </p>
-
-                <small>
-                    📅 2026
-                </small>
-
-            </div>
-
-        </article>
-
-
-        <article class="business-card">
-
-            <div class="business-info">
-
-                <small>
-                    EVENTS
-                </small>
-
-                <h3>
-                    Kurnool Utsav Updates
-                </h3>
-
-                <p>
-                    Get the latest information about upcoming events and
-                    celebrations in Kurnool.
-                </p>
-
-                <a href="/events">
-                    View Events →
-                </a>
-
-            </div>
-
-        </article>
-
-
-        <article class="business-card">
-
-            <div class="business-info">
-
-                <small>
-                    LOCAL BUSINESS
-                </small>
-
-                <h3>
-                    Discover Local Businesses
-                </h3>
-
-                <p>
-                    Explore restaurants, services, shops and other businesses
-                    available on KurnoolHub.
-                </p>
-
-                <a href="/businesses">
-                    Explore Businesses →
-                </a>
-
-            </div>
-
-        </article>
+        </div>
 
     </div>
-
 </section>
 
 {% endblock %}

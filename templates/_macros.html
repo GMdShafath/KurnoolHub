@@ -1,0 +1,57 @@
+{# Shared UI pieces. Import with: {% from "_macros.html" import img_src, business_card %} #}
+
+{% macro img_src(path) -%}
+{%- if path and path.startswith('http') -%}{{ path }}{%- elif path -%}{{ url_for('static', filename='images/' ~ path) }}{%- else -%}{{ url_for('static', filename='images/education.jpg') }}{%- endif -%}
+{%- endmacro %}
+
+
+{% macro page_head(eyebrow, title, subtitle) -%}
+<section class="page-head">
+    <div class="container">
+        <span class="eyebrow">{{ eyebrow }}</span>
+        <h1>{{ title|safe }}</h1>
+        {% if subtitle %}<p>{{ subtitle }}</p>{% endif %}
+        {{ caller() if caller else '' }}
+    </div>
+</section>
+{%- endmacro %}
+
+
+{% macro business_card(b, favorite=None) -%}
+{% set liked = b.is_favorite if favorite is none else favorite %}
+<article class="card clickable business-item"
+         data-name="{{ b.name }} {{ b.category }}"
+         onclick="window.location.href='/business/{{ b.id }}'">
+
+    <div class="card-media">
+        <img src="{{ img_src(b.image) }}" alt="{{ b.name }}" loading="lazy">
+
+        {% if b.tag %}<span class="tag">{{ b.tag }}</span>{% endif %}
+
+        <button class="heart {% if liked %}liked{% endif %}"
+                type="button"
+                aria-label="Save to favorites"
+                data-business-id="{{ b.id }}"
+                onclick="event.stopPropagation(); toggleFavorite(this)">{% if liked %}♥{% else %}♡{% endif %}</button>
+    </div>
+
+    <div class="card-body">
+        <span class="card-cat">{{ b.category }}</span>
+        <h3>{{ b.name }}</h3>
+        <div class="card-meta">
+            <span class="rating">{{ b.rating }}</span>
+            <span class="meta">({{ b.reviews }} reviews)</span>
+        </div>
+    </div>
+</article>
+{%- endmacro %}
+
+
+{% macro empty_state(icon, title, text, link=None, link_text=None) -%}
+<div class="empty-state">
+    <div class="empty-icon">{{ icon }}</div>
+    <h3>{{ title }}</h3>
+    <p>{{ text }}</p>
+    {% if link %}<a class="btn btn-primary" href="{{ link }}">{{ link_text }}</a>{% endif %}
+</div>
+{%- endmacro %}
